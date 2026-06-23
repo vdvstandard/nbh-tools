@@ -1,0 +1,334 @@
+{{ 'section-brickstore-flagship.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  #BrickstoreFlagship-{{ section.id }} {
+    --brickstore-mobile-media-height: {{ section.settings.mobile_media_height }}vh;
+    --brickstore-desktop-media-height: {{ section.settings.desktop_media_height }}vh;
+    --brickstore-media-text-gap: {{ section.settings.media_text_gap | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    #BrickstoreFlagship-{{ section.id }} {
+      --brickstore-media-text-gap: {{ section.settings.media_text_gap }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign flagship_block = section.blocks.first
+  assign image_loading = 'lazy'
+  assign image_fetchpriority = 'auto'
+
+  if section.index == 1
+    assign image_loading = 'eager'
+    assign image_fetchpriority = 'high'
+  endif
+-%}
+
+<div
+  id="BrickstoreFlagship-{{ section.id }}"
+  class="brickstore-flagship color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
+>
+  <div class="brickstore-flagship__module" {% if flagship_block %}{{ flagship_block.shopify_attributes }}{% endif %}>
+    <div class="brickstore-flagship__media-shell{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+      <div class="brickstore-flagship__media media">
+        {%- if flagship_block != blank -%}
+          {%- liquid
+            assign preferred_media_type = flagship_block.settings.media_type | default: 'image'
+            assign selected_image = flagship_block.settings.image
+            assign selected_video = flagship_block.settings.video
+            assign render_image = blank
+            assign render_video = blank
+
+            if preferred_media_type == 'video'
+              assign render_video = selected_video
+              if render_video == blank
+                assign render_image = selected_image
+              endif
+            else
+              assign render_image = selected_image
+              if render_image == blank
+                assign render_video = selected_video
+              endif
+            endif
+          -%}
+
+          {%- if render_video != blank -%}
+            {{
+              render_video
+              | video_tag:
+                class: 'brickstore-flagship__video',
+                image_size: '2400x',
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                playsinline: true
+            }}
+          {%- elsif render_image != blank -%}
+            {%- liquid
+              assign image_height = render_image.width | divided_by: render_image.aspect_ratio | round
+            -%}
+            {{
+              render_image
+              | image_url: width: 3840
+              | image_tag:
+                widths: '550, 750, 1100, 1500, 1780, 2000, 2400, 3000, 3840',
+                sizes: '100vw',
+                width: render_image.width,
+                height: image_height,
+                class: 'brickstore-flagship__image',
+                loading: image_loading,
+                fetchpriority: image_fetchpriority
+            }}
+          {%- else -%}
+            <div class="brickstore-flagship__placeholder">
+              {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- if request.design_mode -%}
+                <p class="brickstore-flagship__placeholder-copy">
+                  Upload an image or a Shopify-hosted video for this flagship module.
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="brickstore-flagship__placeholder">
+            {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- if request.design_mode -%}
+              <p class="brickstore-flagship__placeholder-copy">Add the flagship block to populate this section.</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="brickstore-flagship__content brickstore-flagship__content--{{ section.settings.content_alignment }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <div class="brickstore-flagship__info">
+        {%- if flagship_block != blank -%}
+          {%- if flagship_block.settings.store_name != blank -%}
+            <h2 class="brickstore-flagship__store-name h1">{{ flagship_block.settings.store_name | escape }}</h2>
+          {%- endif -%}
+
+          {%- if flagship_block.settings.address_line_1 != blank or flagship_block.settings.address_line_2 != blank -%}
+            <div class="brickstore-flagship__address">
+              {%- if flagship_block.settings.address_line_1 != blank -%}
+                <p class="brickstore-flagship__address-line caption-with-letter-spacing caption-with-letter-spacing--large">
+                  {{ flagship_block.settings.address_line_1 | escape }}
+                </p>
+              {%- endif -%}
+              {%- if flagship_block.settings.address_line_2 != blank -%}
+                <p class="brickstore-flagship__address-line caption-with-letter-spacing caption-with-letter-spacing--large">
+                  {{ flagship_block.settings.address_line_2 | escape }}
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if flagship_block.settings.body != blank -%}
+            <div class="brickstore-flagship__body rte">
+              {{ flagship_block.settings.body }}
+            </div>
+          {%- endif -%}
+
+          {%- if flagship_block.settings.button_label != blank -%}
+            <div class="brickstore-flagship__actions">
+              <a
+                {% if flagship_block.settings.button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ flagship_block.settings.button_link }}"
+                {% endif %}
+                class="brickstore-flagship__button button button--secondary"
+              >
+                {{- flagship_block.settings.button_label | escape -}}
+              </a>
+            </div>
+          {%- endif -%}
+        {%- elsif request.design_mode -%}
+          <p class="brickstore-flagship__empty-state">Add the flagship block to show store details.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brickstore flagship",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_media_height",
+      "min": 60,
+      "max": 95,
+      "step": 5,
+      "unit": "vh",
+      "label": "Desktop media height",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "min": 35,
+      "max": 80,
+      "step": 5,
+      "unit": "vh",
+      "label": "Mobile media height",
+      "default": 55
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "media_text_gap",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below media",
+      "default": 40
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "flagship",
+      "name": "Flagship media",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Media type",
+          "default": "image",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "text",
+          "id": "store_name",
+          "label": "Store name",
+          "default": "Flagship Store"
+        },
+        {
+          "type": "text",
+          "id": "address_line_1",
+          "label": "Address line 1",
+          "default": "Street address"
+        },
+        {
+          "type": "text",
+          "id": "address_line_2",
+          "label": "Address line 2",
+          "default": "City, Country"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body text"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brickstore flagship",
+      "blocks": [
+        {
+          "type": "flagship"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

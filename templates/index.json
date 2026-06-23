@@ -1,0 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "dime_slider_RxyLJe": {
+      "type": "dime-slider",
+      "blocks": {
+        "panel_6VXB9d": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/Gielles-kerst-pak-836.jpg",
+            "eyebrow": "",
+            "heading": "Online Store",
+            "button_label": "Shop",
+            "button_link": "shopify://collections/all"
+          }
+        },
+        "panel_PWaE8q": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/DSC_6003_e618fbbb-dc7d-4b73-86bf-6146336ca078.jpg",
+            "eyebrow": "",
+            "heading": "Brick Store",
+            "button_label": "Arnhem",
+            "button_link": "shopify://pages/brickstore"
+          }
+        },
+        "panel_RFEjhP": {
+          "type": "panel",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-647.jpg",
+            "eyebrow": "",
+            "heading": "Lookbook",
+            "button_label": "Monet",
+            "button_link": "shopify://pages/lookbook"
+          }
+        }
+      },
+      "block_order": [
+        "panel_6VXB9d",
+        "panel_PWaE8q",
+        "panel_RFEjhP"
+      ],
+      "custom_css": [
+        ".split-hero__content {text-align: center !important; display: flex !important; flex-direction: column !important; align-items: center !important; width: 100% !important; padding-left: 0 !important; padding-right: 0 !important; left: 0 !important; right: 0 !important; margin-left: auto !important; margin-right: auto !important;}",
+        ".split-hero {background-color: #000 !important;}"
+      ],
+      "name": "Split hero",
+      "settings": {
+        "text_color": "#ffffff"
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Featured products",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "all",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 24,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "dime_slider_RxyLJe",
+    "featured_collection"
+  ]
+}

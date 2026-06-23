@@ -1,0 +1,405 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "lookbook_viewer": {
+      "type": "lookbook-viewer",
+      "blocks": {
+        "image_TDArVt": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Suma-Wool-Scarf-burgundy-faun.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_tKgzGA": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Dragan-Wool-Jacket-autumn-foliag.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_Kfk4j4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-586.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_4zJFYj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-664.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_j7tMtk": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-614.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_EThjV6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-534.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_jDpJ8b": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-555.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_NGbYE7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Giel-bruine-samurai-685.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_P7Xx4L": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/road-shirt-rhodes-green-white2.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_VirqDx": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/block-stripe-raglan-tee-white-blue3.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_F8pzUQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/spokane-short-lined-cruiser-jacket-charcole-ombre.jpg",
+            "alt_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_TDArVt",
+        "image_tKgzGA",
+        "image_Kfk4j4",
+        "image_4zJFYj",
+        "image_j7tMtk",
+        "image_EThjV6",
+        "image_jDpJ8b",
+        "image_NGbYE7",
+        "image_P7Xx4L",
+        "image_VirqDx",
+        "image_F8pzUQ"
+      ],
+      "custom_css": [],
+      "name": "SS26 Claude Monet",
+      "settings": {
+        "slogan": "Claude Monet shaped by light, colour and calm",
+        "season_label": "SS26 Claude Monet",
+        "index_label": "",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "lookbook_viewer_b7XMYg": {
+      "type": "lookbook-viewer",
+      "blocks": {
+        "image_UpyyfR": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_1314-3_kopie.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_4KmXqd": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0428.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_9RqrFQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0947.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_RUwDgf": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_1440.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_i8UfML": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0519.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_N3DzQa": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0500.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_eBYXJy": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_1545.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_4DwbXE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0405.jpg",
+            "alt_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_UpyyfR",
+        "image_4KmXqd",
+        "image_9RqrFQ",
+        "image_RUwDgf",
+        "image_i8UfML",
+        "image_N3DzQa",
+        "image_eBYXJy",
+        "image_4DwbXE"
+      ],
+      "name": "AW25 Rembrandt",
+      "settings": {
+        "slogan": "Rembrandt - Master of light and shadow",
+        "season_label": "AW25 Rembrandt",
+        "index_label": "",
+        "color_scheme": ""
+      }
+    },
+    "lookbook_viewer_9QWPDd": {
+      "type": "lookbook-viewer",
+      "blocks": {
+        "image_yJjy8k": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_Nckx6V": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-62.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_hDEgKj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-136.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_NUBJfm": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-138.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_wyW4G3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-181.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_DL8KA6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Kevin-shoot-2025-784.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_aBmdng": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Kevin-shoot-2025-810.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_Pr8x4T": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Kevin-shoot-2025-954.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_dhwH7d": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Kevin-shoot-2025-983.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_fGNNnx": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-2.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_A8c7HF": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-14.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_J4dHJt": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-25_1.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_pQPWFf": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-25.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_hfM8AD": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-36.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_GJrj8Q": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-39.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_UjpwGJ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-173_1.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_R7Brbp": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-199.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_zqAhBd": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-236.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_kfUjc9": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-248.jpg",
+            "alt_text": ""
+          }
+        },
+        "image_CzUNqM": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/nieuwe_gele_kleur-173.jpg",
+            "alt_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_yJjy8k",
+        "image_Nckx6V",
+        "image_hDEgKj",
+        "image_NUBJfm",
+        "image_wyW4G3",
+        "image_DL8KA6",
+        "image_aBmdng",
+        "image_Pr8x4T",
+        "image_dhwH7d",
+        "image_fGNNnx",
+        "image_A8c7HF",
+        "image_J4dHJt",
+        "image_pQPWFf",
+        "image_hfM8AD",
+        "image_GJrj8Q",
+        "image_UjpwGJ",
+        "image_R7Brbp",
+        "image_zqAhBd",
+        "image_kfUjc9",
+        "image_CzUNqM"
+      ],
+      "name": "SS25 Picasso",
+      "settings": {
+        "slogan": "Pablo Picasso",
+        "season_label": "SS25 Picasso",
+        "index_label": "",
+        "color_scheme": ""
+      }
+    },
+    "lookbook_viewer_yKkQty": {
+      "type": "lookbook-viewer",
+      "blocks": {
+        "image_dLtMcp": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC_0428.jpg",
+            "alt_text": "AW24"
+          }
+        }
+      },
+      "block_order": [
+        "image_dLtMcp"
+      ],
+      "name": "AW24",
+      "settings": {
+        "slogan": "IDENTITY LOOKS",
+        "season_label": "AW24",
+        "index_label": "INDEX",
+        "color_scheme": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "lookbook_viewer",
+    "lookbook_viewer_b7XMYg",
+    "lookbook_viewer_9QWPDd",
+    "lookbook_viewer_yKkQty"
+  ]
+}

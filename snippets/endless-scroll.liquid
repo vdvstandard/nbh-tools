@@ -1,0 +1,26 @@
+{% comment %}
+  Renders endless scroll controls for paginated collection and search grids.
+
+  Accepts:
+  - paginate: {Object}
+  - section_id: {String}
+{% endcomment %}
+
+<div
+  class="endless-scroll"
+  data-endless-scroll
+  data-loading-text="{{ 'accessibility.loading' | t | escape }}"
+  data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
+  data-section-id="{{ section_id }}"
+  {% if paginate.next == blank %}
+    hidden
+  {% endif %}
+>
+  <button
+    type="button"
+    class="button button--secondary endless-scroll__button"
+    data-endless-scroll-button
+  >
+    {{ 'general.pagination.load_more' | t }}
+  </button>
+</div>

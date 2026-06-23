@@ -1,0 +1,93 @@
+.image-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.image-mode-toggle__button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: rgba(var(--color-foreground), 0.56);
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.image-mode-toggle__button:hover,
+.image-mode-toggle__button:focus-visible {
+  color: rgb(var(--color-foreground));
+}
+
+.image-mode-toggle__button.is-active {
+  color: rgb(var(--color-foreground));
+  text-decoration: underline;
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.22rem;
+}
+
+.image-mode-toggle__button:focus-visible {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.55);
+  outline-offset: 0.3rem;
+}
+
+.collection-page--dime .product-count {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding-right: 2.4rem;
+}
+
+.collection-page--dime .product-count__text {
+  white-space: nowrap;
+}
+
+.collection-page--dime .product-count .image-mode-toggle {
+  justify-content: flex-end;
+}
+
+.collection-page--dime .image-mode-toggle__button {
+  font-size: 1.4rem;
+}
+
+.product__image-mode-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.6rem;
+}
+
+.product__image-mode-toggle .image-mode-toggle__button {
+  font-size: 1.4rem;
+}
+
+.image-mode-card-media > .image-mode-card-media__image--model {
+  opacity: 0;
+}
+
+html[data-image-mode='model'] .image-mode-card-media[data-has-model-image='true'] > .image-mode-card-media__image--product {
+  opacity: 0;
+}
+
+html[data-image-mode='model'] .image-mode-card-media[data-has-model-image='true'] > .image-mode-card-media__image--model {
+  opacity: 1;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-page--dime .product-count {
+    gap: 1rem;
+  }
+
+  .collection-page--dime .image-mode-toggle__button,
+  .product__image-mode-toggle .image-mode-toggle__button {
+    font-size: 1.3rem;
+  }
+
+  .product__image-mode-toggle {
+    margin-bottom: 1.2rem;
+  }
+}

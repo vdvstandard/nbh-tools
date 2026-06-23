@@ -1,0 +1,156 @@
+.brickstore-flagship__module {
+  width: 100%;
+}
+
+.brickstore-flagship__media-shell {
+  width: 100%;
+}
+
+.brickstore-flagship__media {
+  position: relative;
+  width: 100%;
+  height: var(--brickstore-mobile-media-height);
+  min-height: 28rem;
+  overflow: hidden;
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.brickstore-flagship__media > img,
+.brickstore-flagship__media > video,
+.brickstore-flagship__media .placeholder-svg,
+.brickstore-flagship__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.brickstore-flagship__image,
+.brickstore-flagship__video {
+  object-fit: cover;
+  object-position: center;
+}
+
+.brickstore-flagship__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.brickstore-flagship__placeholder .placeholder-svg {
+  opacity: 0.42;
+}
+
+.brickstore-flagship__placeholder-copy {
+  position: absolute;
+  left: 50%;
+  bottom: 2rem;
+  width: min(32rem, calc(100% - 4rem));
+  margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.08rem;
+  line-height: 1.5;
+}
+
+.brickstore-flagship__content {
+  display: flex;
+  margin-top: var(--brickstore-media-text-gap);
+}
+
+.brickstore-flagship__content--left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.brickstore-flagship__content--center {
+  justify-content: center;
+  text-align: center;
+}
+
+.brickstore-flagship__content--right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.brickstore-flagship__info {
+  width: min(100%, 42rem);
+}
+
+.brickstore-flagship__store-name {
+  margin: 0;
+}
+
+.brickstore-flagship__address {
+  margin-top: 1.2rem;
+}
+
+.brickstore-flagship__address-line {
+  margin: 0.2rem 0 0;
+}
+
+.brickstore-flagship__body {
+  margin-top: 1.8rem;
+}
+
+.brickstore-flagship__body p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.brickstore-flagship__actions {
+  margin-top: 2.4rem;
+}
+
+.brickstore-flagship__button.button {
+  min-width: 18rem;
+}
+
+.brickstore-flagship__empty-state {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .brickstore-flagship__media {
+    height: var(--brickstore-desktop-media-height);
+    min-height: 48rem;
+  }
+}/* Contact page flagship - video portret, tekst naast */
+#BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__module {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 4rem;
+}
+#BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__media-shell {
+  flex: 0 0 45%;
+}
+#BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__media {
+  height: 70vh;
+}
+#BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__content {
+  flex: 1;
+  position: relative !important;
+  width: auto !important;
+  max-width: none !important;
+  padding: 0 5rem !important;
+  align-self: center;
+}
+
+}
+@media (max-width: 749px) {
+  #BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__module {
+    flex-direction: column;
+  }
+  #BrickstoreFlagship-template--24792161943880__bricktstore_flagship_8WKC9f .brickstore-flagship__media {
+    height: 65vh;
+    width: 100%;
+  }
+}
+
