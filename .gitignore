@@ -157,3 +157,19 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
+# Generated local review artifacts
+brand-seo-review-*.html
+
+# Local plugin/toolkit clones
+shopify-ai-toolkit/
+
+# One-off local SSH/debug helpers
+generate_ssh_key.bat
+tmp_ssh_key_gen.py
+tools/generate_ssh_key.py
+tools/git_ssh.cmd
+tools/ssh_debug.ps1
+tools/check_repo.py
+
+# Test runner cache
+.pytest_cache/

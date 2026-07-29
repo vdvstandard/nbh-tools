@@ -1,12 +1,18 @@
 # Neighbourhood Shopify Tools
 
-This repository contains Shopify Admin tools for the Neighbourhood project.
+This repository contains Shopify Admin tools, workflows and store-data
+automation for the Neighbourhood project.
+
+The Shopify theme lives in the separate theme repository:
+
+`C:\Users\david\Documents\neighbourhood-theme`
 
 ## Purpose
 
 - Manage Shopify Admin tokens and OAuth authorization.
 - Sync product brand metafields from Shopify vendor values.
 - Review and apply product classification suggestions in Shopify.
+- Audit and apply catalog, collection and SEO content changes.
 - Keep deterministic execution in `tools/`, with workflow documentation in `workflows/`.
 
 ## Prerequisites
@@ -30,7 +36,7 @@ python -m pip install -r requirements.txt
 
 > No runtime third-party dependencies are required by these tools today; `requirements.txt` is included for future extensions or dev tooling.
 
-## Environment variables
+## Environment Variables
 
 The tools use these variables when command-line options are omitted:
 
@@ -45,10 +51,16 @@ The tools use these variables when command-line options are omitted:
 - `METAFIELD_NAMESPACE`
 - `METAFIELD_KEY`
 - `METAFIELD_TYPE`
+- `SHOPIFY_LOCATION_NAME`
+
+Most automated tools request a temporary client-credentials token at the start
+of the run and keep it in memory. A saved `SHOPIFY_ADMIN_ACCESS_TOKEN` in
+`.env` is only needed for helpers that explicitly write or reuse a stored
+token.
 
 ## Tools
 
-### Token and OAuth helpers
+### Token and OAuth Helpers
 
 - `python tools/authorize-shopify-admin-token.py --open`
   - Start the OAuth authorization flow.
@@ -62,9 +74,9 @@ The tools use these variables when command-line options are omitted:
   - Exchange an App Bridge session token for a Shopify Admin token.
   - Writes the refreshed token to `.env` if `--write-env` is enabled.
 
-### Sync operations
+### Sync Operations
 
-- `python tools/sync-product-brand-metafields.py` 
+- `python tools/sync-product-brand-metafields.py`
   - Dry run by default.
   - Add `--apply` to write changes to Shopify.
 
@@ -73,7 +85,7 @@ The tools use these variables when command-line options are omitted:
   - Use `--validate-review` to validate and `--apply` to update approved rows.
   - `--debug-colors` inspects color pattern definitions without writing changes.
 
-## Workflow docs
+## Workflow Docs
 
 Each major tool has a corresponding workflow document in `workflows/`.
 
@@ -83,15 +95,17 @@ Each major tool has a corresponding workflow document in `workflows/`.
 - `workflows/sync-product-brand-metafields.md`
 - `workflows/sync-product-classification.md`
 
-## Repository structure
+## Repository Structure
 
-- `tools/` — deterministic Python scripts for Shopify operations.
-- `workflows/` — documentation of how each tool should be used.
-- `.tmp/` — temporary outputs and runtime artifacts.
+- `tools/` - deterministic Python scripts for Shopify operations.
+- `tools/data/` - curated JSON specs used by deterministic tools.
+- `workflows/` - documentation of how each tool should be used.
+- `tests/` - unit tests for local tools.
+- `.tmp/` - temporary outputs and runtime artifacts.
+- Theme code is maintained in `C:\Users\david\Documents\neighbourhood-theme`,
+  not in this tooling repository.
 
 ## Notes
 
 - `.tmp/` is temporary and should be regenerated when needed.
 - `.env` contains secrets and is ignored by `.gitignore`.
-Push test completed 2026-06-23. 
-Push test completed 2026-06-23.
