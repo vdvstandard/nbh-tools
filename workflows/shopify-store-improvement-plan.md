@@ -315,17 +315,49 @@ Phase 4 progress and evidence:
 
 ## Phase 5: Cart and checkout review
 
-- [ ] Map the current cart-to-checkout journey on desktop and mobile.
+- [x] Map the current cart-to-checkout journey on desktop and mobile.
 - [ ] Clarify delivery versus Arnhem store pickup before payment.
 - [ ] Make line items, quantity changes, removals, discounts and totals easy to
   scan.
 - [ ] Confirm shipping costs and delivery expectations appear at the right
   moment.
-- [ ] Review express checkout hierarchy without weakening the normal checkout.
+- [x] Review express checkout hierarchy without weakening the normal checkout.
 - [ ] Check payment methods, legal links, error messages and recovery states.
 - [ ] Validate abandoned-cart and confirmation emails.
-- [ ] Treat checkout changes as recommendations first; apply only after
+- [x] Treat checkout changes as recommendations first; apply only after
   approval.
+
+Phase 5 evidence, 2026-07-29:
+
+- Added `tools/audit-cart-checkout.mjs`, a read-only CDP browser audit for
+  product add-to-cart, cart drawer, cart page, quantity controls, removals,
+  checkout handoff and desktop/mobile screenshots.
+- Browser evidence was generated in
+  `.tmp/phase5-cart-checkout-20260729.json` and
+  `.tmp/phase5-cart-checkout-20260729/`.
+- The cart journey renders on desktop and mobile: add-to-cart opens the drawer,
+  line items show image/name/variant/price/quantity/remove controls, the cart
+  page shows the normal checkout button first, and Shop Pay/Google Pay are
+  secondary below it.
+- Policy links are visible in the cart-page footer. Payment icons are not
+  rendered in this local cart-page footer configuration.
+- Product pages show pickup availability for online-purchasable products, but
+  cart drawer and cart page only mention taxes/discounts/shipping calculated at
+  checkout. Recommendation: add approved cart-level copy that explains delivery
+  versus Arnhem store pickup before payment.
+- Local checkout handoff from the theme preview changed URL but landed on a
+  Chrome/HTTP 401 error page, so checkout payment methods, shipping rates and
+  legal links still need live-store or authenticated-preview verification.
+- Notification email validation is outside storefront theme scope; validate
+  abandoned-cart and confirmation emails through Shopify notification previews
+  or Phase 7 test orders.
+- Theme cart fixes applied in `assets/global.js` and `assets/cart.js`: quantity
+  button handling now uses the clicked button instead of nested icon targets,
+  and Shopify 422 cart responses now surface `description/message` text in the
+  cart error UI.
+- Follow-up verification is pending because repeated cart endpoint checks
+  temporarily triggered Shopify preview `429 Too Many Requests` responses on
+  `/cart.js`.
 
 ## Phase 6: Performance and accessibility
 
