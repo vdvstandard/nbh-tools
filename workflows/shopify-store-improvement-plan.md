@@ -210,6 +210,12 @@ Phase 3 result:
 - Authenticated browser tests load 53 of 53 Drake's products and hide the
   endless-scroll control at the end. Single-page collections correctly render
   without that control.
+- On 29 July 2026, the Phase 3B editorial SEO pass replaced the first full
+  brand-copy round with more experience-led, shop-floor-specific copy for all
+  34 canonical brand collections.
+- The Phase 3B post-apply verification preserved all 34 descriptions and SEO
+  sets, reported no duplicate or missing canonical vendor collections and
+  returned no issues requiring action.
 
 Phase 3 implementation and evidence:
 
@@ -225,6 +231,10 @@ Phase 3 implementation and evidence:
 - `.tmp/phase3-brand-storefront-post-apply-20260725.json`
 - `.tmp/phase3-drakes-post-apply.json`
 - `.tmp/phase3-akog-post-apply.json`
+- `.tmp/phase3b-brand-content-apply-20260729.json`
+- `.tmp/phase3b-brand-content-verify-apply-20260729.json`
+- `.tmp/phase3b-brand-seo-post-apply-20260729.json`
+- `.tmp/phase3b-eeat-review.md`
 
 API compatibility note:
 
@@ -238,16 +248,70 @@ API compatibility note:
 
 ## Phase 4: Storefront and theme behavior
 
-- [ ] Resolve the 29 Theme Check errors and 23 warnings by risk and template.
-- [ ] Regression-test collection filters, endless loading and product counts.
-- [ ] Test product cards with normal price, sale price, long titles, missing
+- [x] Resolve the 29 Theme Check errors and 23 warnings by risk and template.
+- [x] Regression-test collection filters, endless loading and product counts.
+- [x] Test product cards with normal price, sale price, long titles, missing
   image and in-store-exclusive treatment.
-- [ ] Verify header, search, mobile menu, cart drawer and account flows.
-- [ ] Check that all buttons use consistent sizing and that `Contact us`
+- [x] Verify header, search, mobile menu, cart drawer and account flows.
+- [x] Check that all buttons use consistent sizing and that `Contact us`
   matches its peer actions.
-- [ ] Test desktop and mobile layouts for overlap, overflow and accidental
+- [x] Test desktop and mobile layouts for overlap, overflow and accidental
   whitespace.
-- [ ] Run visual screenshots against the development theme before every push.
+- [x] Run visual screenshots against the development theme before every push.
+
+Phase 4 progress and evidence:
+
+- Theme Check now reports zero offenses for the fixed theme repository after
+  repairing header markup, section schema validity, translation coverage,
+  unused Liquid assignments, variable naming and orphaned snippets.
+- Collection, filter, endless-loading and product-count regression tests now
+  pass for canonical brand pages and `/collections/all` brand-filter URLs.
+- The theme now shows the filtered visible product count for A Kind of Guise
+  when only products with an active online sale window are rendered.
+- `tools/audit-brand-storefront.py` records rendered product-count labels and
+  treats the A Kind of Guise storefront visibility policy explicitly.
+- `tools/audit-endless-scroll.mjs` records product-count labels, checks them
+  against expected product totals and tolerates non-critical Chrome temp-file
+  cleanup locks.
+- Product-card regression tests crawled 293 rendered cards across published
+  brand collections plus `in-store-exclusive`; normal price, sale price, long
+  title and in-store-exclusive cards passed. No visible missing-image card was
+  rendered, which matches the catalog policy that keeps missing-image products
+  out of the storefront.
+- Header, search, mobile menu, cart drawer and account flows pass browser QA.
+  Search submits `drake` to `/search`, the cart drawer opens with the empty
+  state and account links resolve to Shopify's customer-authentication
+  handoff.
+- Product action button QA passes on desktop and mobile. `Contact us` on the
+  in-store-exclusive product uses the same full-width product-form button
+  treatment as `Add to cart`: 45px tall, matching font sizing, matching width
+  in its product column and no text overflow.
+- Desktop and mobile layout smoke tests pass across collection, filtered
+  collection, product, search and policy pages. The audit found no horizontal
+  overflow, no product-grid overlaps and no empty main-content states.
+- Visual screenshot QA captured 18 desktop/mobile screenshots across
+  collection, filtered collection, A Kind of Guise, in-store-exclusive,
+  product, search, contact policy and lookbook templates. The mobile lookbook
+  image spacing was tightened after review and the screenshot batch was
+  regenerated with zero blank-candidate errors.
+- `.tmp/phase4-theme-check-clean-20260729.json`
+- `.tmp/phase4-brand-storefront-regression-20260729.json`
+- `.tmp/phase4-brand-storefront-regression-20260729.md`
+- `.tmp/phase4-drakes-endless-scroll-20260729.json`
+- `.tmp/phase4-drakes-endless-scroll-20260729.png`
+- `.tmp/phase4-akog-endless-scroll-20260729.json`
+- `.tmp/phase4-akog-endless-scroll-20260729.png`
+- `.tmp/phase4-filter-drakes-endless-scroll-20260729.json`
+- `.tmp/phase4-filter-drakes-endless-scroll-20260729.png`
+- `.tmp/phase4-filter-akog-endless-scroll-20260729.json`
+- `.tmp/phase4-filter-akog-endless-scroll-20260729.png`
+- `.tmp/phase4-product-card-audit-20260729.json`
+- `.tmp/phase4-product-card-audit-20260729.md`
+- `.tmp/phase4-theme-flows-20260729.json`
+- `.tmp/phase4-theme-flows-desktop-20260729.png`
+- `.tmp/phase4-theme-flows-mobile-20260729.png`
+- `.tmp/phase4-visual-screenshots-20260729.json`
+- `.tmp/phase4-visual-screenshots-20260729/`
 
 ## Phase 5: Cart and checkout review
 

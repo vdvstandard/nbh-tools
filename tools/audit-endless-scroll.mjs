@@ -143,8 +143,15 @@ async function readMetrics(client) {
       const grid = document.querySelector('[data-endless-scroll-grid]');
       const control = document.querySelector('[data-endless-scroll]');
       const area = document.querySelector('[data-endless-scroll-area]');
+      const productCountText =
+        document.getElementById('ProductCount')?.textContent
+          .replace(/\\s+/g, ' ')
+          .trim() || '';
+      const productCountMatch = productCountText.match(/\\d+/);
       return {
         cards: grid ? grid.querySelectorAll(':scope > .grid__item').length : 0,
+        productCountText,
+        productCountValue: productCountMatch ? Number(productCountMatch[0]) : null,
         nextUrl: control?.dataset.nextUrl || '',
         controlPresent: Boolean(control),
         controlHidden: control ? control.hidden : null,
@@ -217,7 +224,7 @@ async function run() {
       });
     });
     client.on("Network.responseReceived", (event) => {
-      if (!event.response?.url.includes("/collections/drakes")) return;
+      if (!event.response?.url.includes("/collections/")) return;
       networkResponses.push({
         url: event.response.url,
         status: event.response.status,
@@ -278,6 +285,17 @@ async function run() {
         actual: final.cards,
       });
     }
+    if (
+      final.productCountValue !== null &&
+      final.productCountValue !== args.expected
+    ) {
+      issues.push({
+        code: "product_count_label_mismatch",
+        expected: args.expected,
+        actual: final.productCountValue,
+        text: final.productCountText,
+      });
+    }
     if (final.nextUrl) {
       issues.push({
         code: "next_url_remains_after_last_page",
@@ -315,6 +333,8 @@ async function run() {
         {
           expectedProducts: args.expected,
           finalProducts: final.cards,
+          finalProductCountText: final.productCountText,
+          finalProductCountValue: final.productCountValue,
           nextUrl: final.nextUrl,
           controlHidden: final.controlHidden,
           visibleLoadMore: final.visibleLoadMore,
@@ -329,7 +349,18 @@ async function run() {
     client?.close();
     if (!chrome.killed) chrome.kill();
     await sleep(500);
-    await rm(profilePath, { recursive: true, force: true });
+    try {
+      await rm(profilePath, {
+        recursive: true,
+        force: true,
+        maxRetries: 5,
+        retryDelay: 250,
+      });
+    } catch (error) {
+      process.stderr.write(
+        `Warning: could not remove Chrome profile ${profilePath}: ${error.message}\n`,
+      );
+    }
   }
 }
 

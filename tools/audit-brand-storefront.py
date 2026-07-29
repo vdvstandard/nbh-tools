@@ -58,6 +58,7 @@ class StorefrontParser(HTMLParser):
         self.meta_robots = ""
         self.canonical = ""
         self.h1_values: List[str] = []
+        self.product_count_text: List[str] = []
         self.product_cards = 0
         self.product_grid_index: Optional[int] = None
         self.seo_bottom_index: Optional[int] = None
@@ -71,6 +72,7 @@ class StorefrontParser(HTMLParser):
         self.stack: List[Dict[str, Any]] = []
         self.capture_title = False
         self.capture_h1_depth = 0
+        self.capture_product_count_depth = 0
         self.capture_seo_depth = 0
         self.capture_bold_depth = 0
         self.capture_json_ld = False
@@ -91,6 +93,7 @@ class StorefrontParser(HTMLParser):
         frame = {
             "tag": normalized,
             "h1": False,
+            "product_count": False,
             "seo": False,
             "bold": False,
             "jsonld": False,
@@ -116,6 +119,9 @@ class StorefrontParser(HTMLParser):
             self.capture_h1_depth += 1
             self.h1_values.append("")
             frame["h1"] = True
+        if attributes.get("id") == "ProductCount":
+            self.capture_product_count_depth += 1
+            frame["product_count"] = True
 
         if attributes.get("id") == "product-grid":
             self.product_grid_index = self.element_index
@@ -190,6 +196,10 @@ class StorefrontParser(HTMLParser):
             self.capture_title = False
         if frame.get("h1"):
             self.capture_h1_depth = max(0, self.capture_h1_depth - 1)
+        if frame.get("product_count"):
+            self.capture_product_count_depth = max(
+                0, self.capture_product_count_depth - 1
+            )
         if frame.get("bold"):
             self.capture_bold_depth = max(
                 0, self.capture_bold_depth - 1
@@ -206,6 +216,8 @@ class StorefrontParser(HTMLParser):
             self.title_parts.append(data)
         if self.capture_h1_depth and self.h1_values:
             self.h1_values[-1] += data
+        if self.capture_product_count_depth:
+            self.product_count_text.append(data)
         if self.capture_seo_depth:
             self.seo_bottom_text.append(data)
             if self.capture_bold_depth:
@@ -222,6 +234,13 @@ def normalize_text(value: str) -> str:
 
 def word_count(value: str) -> int:
     return len(re.findall(r"\b[\w][\w'-]*\b", value))
+
+
+def leading_int(value: str) -> Optional[int]:
+    match = re.search(r"\d+", normalize_text(value))
+    if not match:
+        return None
+    return int(match.group(0))
 
 
 def fetch_html(url: str, attempts: int = 3) -> Dict[str, Any]:
@@ -313,6 +332,10 @@ def analyze_page(
         re.sub(r"^Collection:\s*", "", value, flags=re.IGNORECASE)
         for value in raw_h1_values
     ]
+    rendered_product_count_text = normalize_text(
+        " ".join(parser.product_count_text)
+    )
+    rendered_product_count = leading_int(rendered_product_count_text)
     seo_text = normalize_text(" ".join(parser.seo_bottom_text))
     bold_text = normalize_text(" ".join(parser.seo_bottom_bold_words))
     types = schema_types(parser.json_ld_values)
@@ -321,6 +344,13 @@ def analyze_page(
     if collection["published"]:
         remaining = max(product_counts["active"] - ((page - 1) * 24), 0)
         expected_cards = min(remaining, 24)
+        if (
+            page == 1
+            and handle in {"a-kind-of-guise", "in-store-exclusive"}
+            and rendered_product_count is not None
+            and rendered_product_count < product_counts["active"]
+        ):
+            expected_cards = min(rendered_product_count, 24)
 
     issues: List[Dict[str, str]] = []
 
@@ -390,6 +420,21 @@ def analyze_page(
                 ),
             )
         if (
+            page == 1
+            and rendered_product_count is not None
+            and rendered_product_count <= 24
+            and rendered_product_count != parser.product_cards
+        ):
+            issue(
+                "product_count_label_mismatch",
+                "error",
+                (
+                    "Rendered product count label is "
+                    f"'{rendered_product_count_text}', but found "
+                    f"{parser.product_cards} cards."
+                ),
+            )
+        if (
             parser.seo_bottom_index is not None
             and parser.product_grid_index is not None
             and parser.seo_bottom_index < parser.product_grid_index
@@ -432,6 +477,8 @@ def analyze_page(
         "h1Raw": raw_h1_values,
         "productCards": parser.product_cards,
         "expectedProductCards": expected_cards,
+        "renderedProductCountText": rendered_product_count_text,
+        "renderedProductCount": rendered_product_count,
         "collectionEmpty": parser.collection_empty,
         "paginationWrappers": parser.pagination_wrappers,
         "endlessControls": parser.endless_controls,
