@@ -27,3 +27,7 @@ python tools/refresh-shopify-admin-token.py --session-token <token> --write-env
 
 - This tool is useful when you already have a frontend App Bridge session token.
 - Use `--expiring` to request an expiring offline token.
+- If `SHOPIFY_SESSION_TOKEN` is empty or unavailable, use the client-credentials helper instead:
+  `python tools/get-shopify-admin-token.py --write-env`.
+- When Shopify Admin tools fail with `401 Unauthorized`, refresh `.env` first with
+  `python tools/get-shopify-admin-token.py --write-env`, then retry the original command.

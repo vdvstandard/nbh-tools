@@ -1,0 +1,625 @@
+{
+  "schemaVersion": 2,
+  "status": "pending_approval",
+  "language": "en",
+  "sourcePlan": ".tmp/phase3-brand-content-plan-20260725.json",
+  "method": {
+    "principles": [
+      "Write for brand discovery and product selection before search engines.",
+      "Use the old collection copy as a source of useful history, materials and product context.",
+      "Remove generic luxury language, unsupported claims and repeated sales phrases.",
+      "Name the brand naturally near the start and describe the actual Neighbourhood selection.",
+      "Use one short introduction above the product grid and one supporting paragraph below it.",
+      "Keep every SEO title and meta description specific, readable and unique."
+    ],
+    "shopifyHtml": "The <p>-//-</p> delimiter separates the visible introduction from the supporting text below the product grid.",
+    "approvalRule": "This file is a proposal only and must not be used for a Shopify write before explicit approval."
+  },
+  "collections": {
+    "a-kind-of-guise": {
+      "oldScore": 1,
+      "verdict": "rewrite",
+      "searchIntent": "Discover A Kind of Guise and browse the current menswear selection.",
+      "retainedFromOld": [
+        "Munich identity and contemporary design perspective",
+        "Focus on craftsmanship and detail",
+        "Clothing and accessories as the relevant product scope"
+      ],
+      "issues": [
+        "The old copy repeats the brand name and broad luxury terms far too often.",
+        "Sustainability, ethics and in-house production are asserted without a source in the collection data.",
+        "The actual Neighbourhood assortment and in-store availability are difficult to find."
+      ],
+      "descriptionHtml": "<p>A Kind of Guise is a Munich menswear label with a considered approach to fabric, colour and relaxed tailoring. Its collections combine familiar wardrobe forms with distinctive weaves, patterns and seasonal materials, giving each piece character without making it difficult to wear.</p><p>-//-</p><p>At Neighbourhood, the A Kind of Guise selection includes shirts, trousers, blazers, outerwear and accessories. Current highlights range from softly constructed tailoring to patterned shirting and textured jackets. Some pieces are available exclusively in our Arnhem store. Contact us for sizing, availability or more information about the in-store selection.</p>",
+      "seoTitle": "A Kind of Guise Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Explore A Kind of Guise at Neighbourhood Arnhem, including relaxed tailoring, shirts, trousers and outerwear selected for fabric and construction."
+    },
+    "atelier-neighbourhood": {
+      "oldScore": 1,
+      "verdict": "rewrite",
+      "searchIntent": "Understand Atelier Neighbourhood and browse its own-label knitwear.",
+      "retainedFromOld": [
+        "It is Neighbourhood's own product line"
+      ],
+      "issues": [
+        "The Dutch placeholder does not explain the label or its products.",
+        "It creates a language mismatch on the English storefront.",
+        "It does not distinguish Atelier from Quality Goods by Neighbourhood."
+      ],
+      "descriptionHtml": "<p>Atelier Neighbourhood is a distinct line within our own label, developed around focused designs and carefully chosen materials. The current collection centres on merino knitwear, including Milano-rib long sleeves and clean crewneck shapes in a considered range of colours.</p><p>-//-</p><p>Each Atelier issue begins with a specific garment, fabric or construction rather than a broad seasonal range. This gives the line room to refine proportion, handle and colour across a small group of pieces. Browse the available Atelier Neighbourhood knitwear online or visit our store in Arnhem to compare the fabric and fit in person.</p>",
+      "seoTitle": "Atelier Neighbourhood | Neighbourhood Arnhem",
+      "metaDescription": "Discover Atelier Neighbourhood, our focused own-label line of merino knitwear and considered issues, available online and in our Arnhem store."
+    },
+    "baracuta": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Learn about Baracuta and the G9 Harrington jacket.",
+      "retainedFromOld": [
+        "Founded in Manchester in 1937",
+        "The G9 Harrington and its golf origins",
+        "Signature Fraser Tartan lining"
+      ],
+      "issues": [
+        "The old text relies on several superlatives and celebrity references.",
+        "It does not connect the history clearly to the actual Neighbourhood products.",
+        "The closing sales language is broader than the current stock position supports."
+      ],
+      "descriptionHtml": "<p>Baracuta was founded in Manchester in 1937 and is closely associated with the original G9 Harrington jacket. Designed as a practical golf jacket, the G9 became known for its short blouson shape, umbrella back yoke and Fraser Tartan lining.</p><p>-//-</p><p>The Neighbourhood Baracuta selection centres on the G9, from the Original Jacket in core colours to seasonal fabric versions such as Melton wool. The collection is currently hidden while stock is at zero, but this page retains the brand and product context for its return. Contact our Arnhem store for future availability.</p>",
+      "seoTitle": "Baracuta G9 Jackets | Neighbourhood Arnhem",
+      "metaDescription": "Discover Baracuta at Neighbourhood Arnhem, home of the G9 Harrington jacket with its Manchester origins, golf details and Fraser Tartan lining."
+    },
+    "barbour": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Barbour outerwear and care products at Neighbourhood.",
+      "retainedFromOld": [
+        "Long British outerwear heritage",
+        "Practical clothing with an emphasis on durability",
+        "Classic design as the main brand position"
+      ],
+      "issues": [
+        "The old copy is almost entirely abstract claims about timeless quality.",
+        "It omits the actual Heritage Liddesdale jacket and wax-care product.",
+        "It contained a stray closing quotation mark."
+      ],
+      "descriptionHtml": "<p>Barbour has built its name around practical British outerwear, balancing protection, useful details and familiar country clothing shapes. Beyond its waxed jackets, the range includes quilted layers and the care products needed to maintain waxed cotton garments.</p><p>-//-</p><p>At Neighbourhood, the current Barbour selection includes the lightweight Heritage Liddesdale quilted jacket and Thornproof Dressing for rewaxing Barbour outerwear. The Liddesdale works as an easy transitional layer over knitwear or shirting. Browse the available pieces online or visit our Arnhem store for fit and garment-care advice.</p>",
+      "seoTitle": "Barbour Outerwear and Care | Neighbourhood Arnhem",
+      "metaDescription": "Shop Barbour at Neighbourhood Arnhem, including the Heritage Liddesdale quilted jacket and Thornproof Dressing for waxed outerwear care."
+    },
+    "cano": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Browse CANO leather footwear and understand its construction.",
+      "retainedFromOld": [
+        "Footwear informed by Mexican craft traditions",
+        "Leather shoes with comfort and everyday wear in mind",
+        "Huarache-inspired construction as useful product context"
+      ],
+      "issues": [
+        "The old sustainability, fair-trade and ethical claims need a source for this exact CANO label.",
+        "It describes boots that are not part of the current selection.",
+        "The wording is broad and does not identify the Javier or Luis Wedge models."
+      ],
+      "descriptionHtml": "<p>CANO brings traditional woven-footwear references into clean leather shoes for everyday wear. The open construction and supple uppers give the collection a lighter character than a conventional leather shoe, while the darker colourways keep it easy to combine.</p><p>-//-</p><p>The Neighbourhood CANO selection includes the Javier and Luis Wedge in black, coffee and cognac tones. The Javier has a straightforward low profile, while the Luis Wedge adds a more substantial sole. Browse the available models online or visit our Arnhem store to compare the construction, fit and leather in person.</p>",
+      "seoTitle": "CANO Leather Footwear | Neighbourhood Arnhem",
+      "metaDescription": "Explore CANO footwear at Neighbourhood Arnhem, including Javier and Luis Wedge leather shoes selected for woven construction and everyday comfort."
+    },
+    "carhartt-wip": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Shop the current Carhartt WIP clothing selection.",
+      "retainedFromOld": [
+        "Connection to Carhartt workwear",
+        "Workwear function interpreted for contemporary clothing",
+        "Jackets, trousers, sweats and T-shirts as the relevant range"
+      ],
+      "issues": [
+        "The old copy repeats streetwear and luxury terminology without helping product choice.",
+        "It overstates exclusivity and global status.",
+        "It does not explain the current Chase programme or available categories."
+      ],
+      "descriptionHtml": "<p>Carhartt WIP adapts the practical language of Carhartt workwear into contemporary clothing for everyday use. Familiar fabrics, straightforward shapes and restrained branding make the pieces easy to combine across casual wardrobes.</p><p>-//-</p><p>The Carhartt WIP selection at Neighbourhood includes Chase sweats and T-shirts alongside shirts, trousers, swim shorts and outerwear. The Chase pieces provide dependable jersey basics, while seasonal trousers and jackets bring more workwear structure. Browse the available colours and fits online or visit our Arnhem store for sizing advice.</p>",
+      "seoTitle": "Carhartt WIP Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Shop Carhartt WIP at Neighbourhood Arnhem, including Chase sweats, T-shirts, shirts, trousers and practical workwear-informed layers."
+    },
+    "carlo-lanza": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Choose Carlo Lanza socks by fibre and season.",
+      "retainedFromOld": [
+        "Italian sock-making context",
+        "Attention to yarn and production",
+        "Comfort and material as the product focus"
+      ],
+      "issues": [
+        "Fair-wage, certification and factory claims should be linked to current evidence before publication.",
+        "The old text is written as a manifesto rather than a useful collection introduction.",
+        "It does not help customers choose between cotton, wool, merino and cashmere."
+      ],
+      "descriptionHtml": "<p>Carlo Lanza focuses on Italian-made socks with close attention to yarn, colour and everyday comfort. The collection moves from lighter cotton options to warmer wool, merino and cashmere styles, making material the most useful starting point when choosing a pair.</p><p>-//-</p><p>At Neighbourhood, Carlo Lanza socks come in quiet neutrals and richer seasonal colours. Cotton works well through the milder months, while wool and merino add warmth without excessive bulk. Cashmere styles offer the softest handle in the range. Browse the available pairs online or ask us in store for help choosing the right fibre.</p>",
+      "seoTitle": "Carlo Lanza Socks | Neighbourhood Arnhem",
+      "metaDescription": "Discover Carlo Lanza socks at Neighbourhood Arnhem in cotton, wool, merino and cashmere, selected for colour, comfort and seasonal wear."
+    },
+    "dehen-1920": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Discover Dehen 1920 jackets, jersey and headwear.",
+      "retainedFromOld": [
+        "Founded in Portland, Oregon in 1920",
+        "American sportswear and varsity references",
+        "Substantial knitwear and outerwear construction"
+      ],
+      "issues": [
+        "The old copy repeats heritage and luxury claims instead of describing garments.",
+        "It refers to exclusivity that is not supported.",
+        "The current varsity jackets, Winston jackets and heavyweight tees deserve priority."
+      ],
+      "descriptionHtml": "<p>Founded in Portland, Oregon in 1920, Dehen 1920 is rooted in American knitwear, varsity clothing and substantial outerwear. The brand is best understood through fabric weight and construction, with familiar sportswear shapes given a particularly solid handle.</p><p>-//-</p><p>Neighbourhood's Dehen 1920 selection includes varsity and Winston jackets, heavyweight long-sleeve T-shirts and wool baseball caps. The jackets bring structure and texture, while the jersey pieces offer a simpler way into the collection. Browse the available Dehen 1920 pieces online or visit our Arnhem store to compare fabric and fit.</p>",
+      "seoTitle": "Dehen 1920 Jackets and Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Explore Dehen 1920 at Neighbourhood Arnhem, including varsity jackets, Winston outerwear, heavyweight T-shirts and wool caps."
+    },
+    "drakes": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Discover Drake's British menswear and browse the current selection.",
+      "retainedFromOld": [
+        "Founded in London in 1977",
+        "Origins in ties, pocket squares and accessories",
+        "Oxford shirts, knitwear and relaxed tailoring as key categories"
+      ],
+      "issues": [
+        "The second half relies on generic luxury and discerning-customer language.",
+        "Claims about the finest mills and products being made to last need more specific support.",
+        "The current breadth of the Neighbourhood selection can be explained more clearly."
+      ],
+      "descriptionHtml": "<p>Drake's was founded in London in 1977 and first became known for ties, scarves and pocket squares. Its approach has since grown into a complete British wardrobe, bringing soft tailoring, Oxford shirts, knitwear and expressive accessories together with an easy, lived-in character.</p><p>-//-</p><p>The Drake's selection at Neighbourhood ranges from button-down shirts and knitted rugby tops to blazers, trousers, outerwear, caps and pocket squares. Colour and pattern are central, but the pieces remain straightforward to combine. Browse the collection online or visit our Arnhem store for sizing, styling and current availability.</p>",
+      "seoTitle": "Drake's British Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Shop Drake's at Neighbourhood Arnhem, from Oxford shirts and knitwear to relaxed tailoring, outerwear, caps and pocket squares."
+    },
+    "eastlogue": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Learn about Eastlogue and browse its current outerwear.",
+      "retainedFromOld": [
+        "South Korean label founded in 2011",
+        "Hunting, fishing, hiking and military references",
+        "Traditional sportswear reworked through modern silhouettes"
+      ],
+      "issues": [
+        "The old copy is written in the brand's first-person voice rather than Neighbourhood's voice.",
+        "It repeats timelessness and values without enough product information.",
+        "The current Cameraman and Trapper jackets should be named."
+      ],
+      "descriptionHtml": "<p>Eastlogue is a South Korean menswear label founded in 2011, drawing from hunting, fishing, hiking, military clothing and traditional sportswear. Those references are reworked through modern proportions, with pockets, fabric and protective details kept central to each design.</p><p>-//-</p><p>At Neighbourhood, the Eastlogue selection currently focuses on Cameraman and Trapper outerwear in dark navy and checked fabrics. These jackets combine useful volume with a clear approach to layering and storage. Browse the available pieces online or visit our Arnhem store to try the shapes and compare the fabrics in person.</p>",
+      "seoTitle": "Eastlogue Outerwear | Neighbourhood Arnhem",
+      "metaDescription": "Discover Eastlogue at Neighbourhood Arnhem, with South Korean outerwear informed by military, hunting, hiking and traditional sportswear."
+    },
+    "ebbets": {
+      "oldScore": 3,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Ebbets wool baseball caps and understand their archival references.",
+      "retainedFromOld": [
+        "Founded in 1988",
+        "Archival baseball and American sports references",
+        "Wool caps with historic team graphics"
+      ],
+      "issues": [
+        "The old copy describes jerseys that are not in the current collection.",
+        "It repeats vintage authenticity and luxury claims at excessive length.",
+        "The two currently active cap styles are buried beneath brand mythology."
+      ],
+      "descriptionHtml": "<p>Founded in 1988, Ebbets Field Flannels looks to archival baseball and American sports graphics for its headwear. Wool fabrics, period-inspired lettering and structured cap shapes give the collection a specific visual language without relying on modern team branding.</p><p>-//-</p><p>The current Ebbets selection at Neighbourhood includes a black wool cap and an Oakland Clippers 1967 ballcap in blue. Both work naturally with denim, knitwear and workwear-informed outerwear. Browse the available caps online or visit our Arnhem store to compare fit, fabric and current availability.</p>",
+      "seoTitle": "Ebbets Wool Baseball Caps | Neighbourhood Arnhem",
+      "metaDescription": "Shop Ebbets caps at Neighbourhood Arnhem, including wool baseball headwear with archival team graphics and period-inspired lettering."
+    },
+    "edwin-japan": {
+      "oldScore": 3,
+      "verdict": "rewrite",
+      "searchIntent": "Compare Edwin Japan denim fits and finishes.",
+      "retainedFromOld": [
+        "Japanese denim heritage dating to 1947",
+        "Fabric development and denim construction",
+        "A range of fits rather than one generic jean"
+      ],
+      "issues": [
+        "The old text uses denim keywords and superlatives repeatedly.",
+        "It mentions slim fits while the current selection is loose, tapered and wide.",
+        "It does not explain the practical difference between raw and washed denim."
+      ],
+      "descriptionHtml": "<p>Edwin has worked with denim in Japan since 1947, developing jeans through fabric, wash and fit rather than treating every pair the same. The Edwin Japan collection at Neighbourhood focuses on clear differences in cut and cloth that are useful when choosing a new pair.</p><p>-//-</p><p>Current styles include loose, regular tapered and wide fits, alongside raw and unwashed denim. Raw denim begins firmer and changes through wear, while washed options feel softer from the start. Browse the available Edwin Japan jeans online or visit our Arnhem store for help comparing rise, leg shape and fabric.</p>",
+      "seoTitle": "Edwin Japan Denim Jeans | Neighbourhood Arnhem",
+      "metaDescription": "Explore Edwin Japan jeans at Neighbourhood Arnhem, including raw, unwashed, loose, tapered and wide denim fits."
+    },
+    "filson": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Learn about Filson outerwear and its practical fabrics.",
+      "retainedFromOld": [
+        "Seattle origins during the Klondike Gold Rush",
+        "Mackinaw wool and practical outdoor clothing",
+        "Cruisers, field jackets, vests and overshirts"
+      ],
+      "issues": [
+        "The old copy is dominated by adventure language and durability superlatives.",
+        "It mentions bags, hats and gloves that are not in the current Shopify range.",
+        "The stock status is not explained."
+      ],
+      "descriptionHtml": "<p>Filson began in Seattle during the Klondike Gold Rush, making practical clothing for demanding outdoor work. The brand remains closely associated with substantial fabrics such as Mackinaw wool and with outerwear shaped around protection, storage and layering.</p><p>-//-</p><p>The Neighbourhood Filson range includes wool field jackets, cruisers, vests, overshirts and insulated outerwear. These pieces are currently hidden online while stock is at zero, but the collection page retains their fabric and product context for future availability. Contact our Arnhem store if you are looking for a particular Filson style.</p>",
+      "seoTitle": "Filson Wool Outerwear | Neighbourhood Arnhem",
+      "metaDescription": "Discover Filson at Neighbourhood Arnhem, including Mackinaw wool jackets, cruisers, vests and practical outdoor layers."
+    },
+    "fortela": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Discover Fortela's Italian menswear and current clothing selection.",
+      "retainedFromOld": [
+        "Italian label founded by Alessandro Squarzi",
+        "Traditional tailoring and vintage references",
+        "Fabrics sourced from Italy and Japan"
+      ],
+      "issues": [
+        "The old text leans on premium, timeless and effortless-elegance language.",
+        "It names trousers that are not currently active.",
+        "The current bomber, sweatshirt and vest selection can be more specific."
+      ],
+      "descriptionHtml": "<p>Fortela is an Italian menswear label founded by Alessandro Squarzi, bringing traditional tailoring together with vintage military and workwear references. Fabrics from Italy and Japan play an important role, giving familiar garments a distinctive handle and surface.</p><p>-//-</p><p>The current Fortela selection at Neighbourhood includes a wool bomber jacket, woven crewneck sweatshirts and a woven vest with camouflage lining. Each piece balances relaxed construction with material detail, making it easy to combine with denim or tailored trousers. Browse the available Fortela pieces online or visit our Arnhem store to compare fit and fabric.</p>",
+      "seoTitle": "Fortela Italian Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Explore Fortela at Neighbourhood Arnhem, including Italian menswear shaped by tailoring, vintage references and fabrics from Italy and Japan."
+    },
+    "king-and-tuckfield": {
+      "oldScore": 1,
+      "verdict": "rewrite",
+      "searchIntent": "Browse King & Tuckfield polos and T-shirts.",
+      "retainedFromOld": [
+        "Vintage references",
+        "Knitwear and clothing as the product focus"
+      ],
+      "issues": [
+        "The old text is almost entirely generic elegance and luxury language.",
+        "It provides no origin, material or current product information.",
+        "It does not mention the retro T-shirts, textured T-shirts or two-tone polo."
+      ],
+      "descriptionHtml": "<p>King & Tuckfield brings vintage sportswear references into clean knitwear and jersey shapes. Colour blocking, texture and restrained retro details give the pieces character while keeping them straightforward enough for regular wear.</p><p>-//-</p><p>The current King & Tuckfield selection at Neighbourhood includes retro T-shirts, textured T-shirts and a two-tone polo in softly balanced colour combinations. These pieces work easily with denim, chinos or relaxed tailoring. Browse the available styles online or visit our Arnhem store to compare the fabric, colour and fit.</p>",
+      "seoTitle": "King & Tuckfield Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Discover King & Tuckfield at Neighbourhood Arnhem, including retro T-shirts, textured jersey and two-tone polos selected for colour and fit."
+    },
+    "kops": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Discover Kops Dutch footwear and the current clog.",
+      "retainedFromOld": [
+        "Dutch footwear history dating to 1927",
+        "Leather and construction as the core product story",
+        "Comfort and practical wear"
+      ],
+      "issues": [
+        "The old text describes a broad range of dress and casual shoes that is not currently stocked.",
+        "Sustainability and longevity claims are not supported in the collection data.",
+        "The active Moss clog deserves direct attention."
+      ],
+      "descriptionHtml": "<p>Kops is a Dutch footwear name with roots dating to 1927. Its approach centres on leather, construction and practical comfort, bringing traditional footwear knowledge into shapes that can be worn as part of a contemporary everyday wardrobe.</p><p>-//-</p><p>The current Kops selection at Neighbourhood is the Clog in Moss, a straightforward slip-on with a distinctive green tone. It works with relaxed trousers, denim and workwear-inspired clothing while offering an alternative to a conventional shoe. Visit our Arnhem store for current sizing and availability.</p>",
+      "seoTitle": "Kops Dutch Footwear | Neighbourhood Arnhem",
+      "metaDescription": "Discover Kops footwear at Neighbourhood Arnhem, including the Moss leather clog from a Dutch shoemaking name with roots dating to 1927."
+    },
+    "le-bonnet": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Choose a Le Bonnet beanie or scarf by colour and material.",
+      "retainedFromOld": [
+        "Founded in 2015",
+        "Colour as a central part of the collection",
+        "Scottish wool and traditional knitting context"
+      ],
+      "issues": [
+        "The old copy is too long for a simple accessory collection.",
+        "Certification and sourcing details should be linked to current product evidence.",
+        "It repeatedly calls the beanie perfect, premium and timeless."
+      ],
+      "descriptionHtml": "<p>Founded in 2015, Le Bonnet is built around knitted accessories with a clean shape and an unusually broad approach to colour. The brand's wool-focused beanies and scarves are designed to add warmth and texture without unnecessary decoration.</p><p>-//-</p><p>Neighbourhood carries Le Bonnet beanies and scarves in quiet neutrals as well as brighter seasonal shades. The compact beanie shape works with wool coats, work jackets and casual outerwear, while the colour can either blend in or provide contrast. Browse the current palette online or visit our Arnhem store to see the colours and handle in person.</p>",
+      "seoTitle": "Le Bonnet Beanies and Scarves | Neighbourhood Arnhem",
+      "metaDescription": "Explore Le Bonnet at Neighbourhood Arnhem, with wool beanies and scarves selected for clean shape, knitted texture and a broad colour palette."
+    },
+    "malin-and-goetz": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Malin + Goetz skincare, grooming and fragrance.",
+      "retainedFromOld": [
+        "Simple everyday skincare approach",
+        "Grapefruit cleanser as a recognised product reference",
+        "Minimal presentation and practical routines"
+      ],
+      "issues": [
+        "The old copy overuses luxury, purity and indulgence language.",
+        "Natural, chemical-free and efficacy claims are too broad.",
+        "It ignores the current body care, hair care, candles and fragrance assortment."
+      ],
+      "descriptionHtml": "<p>Malin &amp; Goetz brings skincare, body care, hair care and fragrance into clear everyday routines. The range is straightforward to navigate, from cleansers and moisturisers to deodorants, candles and eau de parfum, with consistent packaging across the collection.</p><p>-//-</p><p>At Neighbourhood, the Malin &amp; Goetz selection includes personal-care staples alongside home and personal fragrance. Scent profiles range from fresh bergamot and vetiver to warmer leather and cannabis notes. Browse the collection online for daily use or gifting, or visit our Arnhem store for help choosing a product or fragrance.</p>",
+      "seoTitle": "Malin & Goetz Skincare and Fragrance | Arnhem",
+      "metaDescription": "Shop Malin & Goetz at Neighbourhood Arnhem, including skincare, body and hair care, candles and eau de parfum for everyday use or gifting."
+    },
+    "nutcracker": {
+      "oldScore": 0,
+      "verdict": "write",
+      "searchIntent": "Browse traditional wooden Christmas nutcrackers by size.",
+      "retainedFromOld": [],
+      "issues": [
+        "The old collection description was blank.",
+        "The page needs to explain the object, available scales and seasonal availability.",
+        "The copy should avoid pretending Nutcracker is a fashion brand."
+      ],
+      "descriptionHtml": "<p>Our Nutcracker collection brings together traditional wooden Christmas figures in several sizes and uniforms. Their painted details and strong upright forms make them seasonal objects for the home, shop window or entrance rather than small decorative accessories.</p><p>-//-</p><p>The current selection includes large, extra-large and giant soldiers and King's Guard figures. Differences in scale make it possible to choose one statement piece or combine several sizes. Availability is seasonal and larger pieces can be difficult to judge online, so contact our Arnhem store if you need exact dimensions or current stock information.</p>",
+      "seoTitle": "Wooden Christmas Nutcrackers | Neighbourhood Arnhem",
+      "metaDescription": "Discover traditional wooden Christmas nutcrackers at Neighbourhood Arnhem, including large soldiers and King's Guard figures in several sizes."
+    },
+    "orslow": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Discover OrSlow Japanese denim and compare the current jeans.",
+      "retainedFromOld": [
+        "Japanese production and slow approach",
+        "Vintage American workwear and military references",
+        "Selvedge denim and garments that develop through wear"
+      ],
+      "issues": [
+        "The old text contains several unqualified durability and superiority claims.",
+        "It repeats timelessness and craftsmanship rather than naming fits.",
+        "The current 105 jeans and 1950s coverall should be central."
+      ],
+      "descriptionHtml": "<p>OrSlow is a Japanese label that studies vintage American workwear, military clothing and denim through a deliberately measured production approach. Fabric development, wash and proportion are central, allowing familiar garments to feel specific without becoming overly designed.</p><p>-//-</p><p>The OrSlow selection at Neighbourhood includes several versions of the 105 jean, from one-wash denim to worn-in finishes, alongside the 1950s Coverall. Compare the jeans by fabric and degree of wash, then choose the finish that suits how you want the denim to develop. Visit our Arnhem store for sizing advice.</p>",
+      "seoTitle": "OrSlow Japanese Denim | Neighbourhood Arnhem",
+      "metaDescription": "Shop OrSlow at Neighbourhood Arnhem, including Japanese 105 denim jeans and the 1950s Coverall shaped by vintage workwear references."
+    },
+    "padmore-and-barnes": {
+      "oldScore": 3,
+      "verdict": "expand",
+      "searchIntent": "Learn about Padmore and Barnes and the P204 footwear selection.",
+      "retainedFromOld": [
+        "Irish shoemaking heritage",
+        "Handcrafted footwear",
+        "Comfort, character and everyday wear"
+      ],
+      "issues": [
+        "The old copy is accurate in direction but too short to explain the P204.",
+        "It does not mention the suede, perforated and pony-leather versions.",
+        "The zero-stock position should be handled without turning the text into an availability notice."
+      ],
+      "descriptionHtml": "<p>Padmore and Barnes is rooted in Irish shoemaking and is best known for relaxed moccasin-style footwear. The P204 combines a hand-stitched upper with a simple crepe sole, giving it a soft, unstructured feel and a recognisable profile.</p><p>-//-</p><p>The Neighbourhood selection focuses on P204 variations in suede, perforated leather and pony leather, including colours developed for the store. The collection is currently hidden while stock is at zero, but the product context remains ready for its return. Contact our Arnhem store for future availability and sizing information.</p>",
+      "seoTitle": "Padmore and Barnes P204 | Neighbourhood Arnhem",
+      "metaDescription": "Discover Padmore and Barnes at Neighbourhood Arnhem, including P204 moccasin footwear in suede, perforated leather and store-specific colours."
+    },
+    "plot": {
+      "oldScore": 2,
+      "verdict": "expand",
+      "searchIntent": "Understand Plot and its wool knitwear focus.",
+      "retainedFromOld": [
+        "Wool knitwear",
+        "Natural material and quiet character",
+        "Considered construction"
+      ],
+      "issues": [
+        "The old copy is too short to explain the label or Model 1.",
+        "There is not enough verified brand history to add origin claims.",
+        "The page should remain useful while the only product is still draft."
+      ],
+      "descriptionHtml": "<p>Plot focuses on wool knitwear with a quiet shape and close attention to material. Rather than building a broad seasonal wardrobe, the label begins with a single model and lets proportion, colour and the natural handle of the yarn define the piece.</p><p>-//-</p><p>The first Plot style prepared for Neighbourhood is Model 1 in navy. The collection remains hidden while that product is reviewed and has no available stock. This description deliberately stays close to the verified product information; further details can be added when material, origin and fit specifications are confirmed.</p>",
+      "seoTitle": "Plot Wool Knitwear | Neighbourhood Arnhem",
+      "metaDescription": "Discover Plot wool knitwear at Neighbourhood Arnhem, beginning with Model 1 and a focus on natural material, proportion and quiet everyday wear."
+    },
+    "quality-goods-by-neighbourhood": {
+      "oldScore": 1,
+      "verdict": "rewrite",
+      "searchIntent": "Understand the Quality Goods own-label line and browse its wardrobe pieces.",
+      "retainedFromOld": [
+        "Neighbourhood's own quality-led product line",
+        "Everyday clothing intended to work across seasons",
+        "Material and practical use as the central idea"
+      ],
+      "issues": [
+        "The old copy is generic enough to describe almost any store.",
+        "It repeats quality, premium and lifestyle language without naming a product.",
+        "It does not distinguish this line from Atelier Neighbourhood."
+      ],
+      "descriptionHtml": "<p>Quality Goods by Neighbourhood is our own-label line for straightforward wardrobe pieces with a close focus on fabric, colour and everyday use. Separate from Atelier Neighbourhood, it develops familiar menswear shapes as dependable parts of the store's wider selection.</p><p>-//-</p><p>The line includes lambswool and wool-cashmere crewnecks, fine merino rollnecks, wool-blend polos and T-shirts, and double-pleated trousers. Each piece is designed to work naturally with the other brands carried at Neighbourhood rather than sit apart from them. Browse the available Quality Goods online or visit our Arnhem store to compare materials and fit.</p>",
+      "seoTitle": "Quality Goods by Neighbourhood | Arnhem",
+      "metaDescription": "Explore Quality Goods by Neighbourhood, our own-label line of lambswool knitwear, wool-blend tops and double-pleated trousers."
+    },
+    "ralph-lauren": {
+      "oldScore": 2,
+      "verdict": "expand",
+      "searchIntent": "Browse Ralph Lauren Oxford shirts and American sportswear.",
+      "retainedFromOld": [
+        "Classic American menswear",
+        "Sportswear and refined fabrics",
+        "Versatile wardrobe staples"
+      ],
+      "issues": [
+        "The old copy is too short to identify the actual products.",
+        "It relies on timeless and refined without explaining fit or category.",
+        "The collection's current zero-stock status is not reflected."
+      ],
+      "descriptionHtml": "<p>Ralph Lauren brings American sportswear, collegiate references and classic shirting into a familiar menswear wardrobe. Oxford cloth, easy layering pieces and restrained colour make the collection particularly useful for everyday combinations.</p><p>-//-</p><p>The Neighbourhood selection includes custom-fit Oxford shirts in solid and striped options, chambray shirting, crewneck sweatshirts and a half-zip layer. The collection is currently hidden while stock is at zero, but the product context remains ready for future availability. Contact our Arnhem store if you are looking for a particular style or size.</p>",
+      "seoTitle": "Ralph Lauren Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Discover Ralph Lauren at Neighbourhood Arnhem, including Oxford shirts, chambray and classic American sportswear layers."
+    },
+    "realign": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Discover Realign selvedge denim and compare the Kenji fabrics.",
+      "retainedFromOld": [
+        "Dutch denim project established in 2021",
+        "Japanese denim and American workwear references",
+        "Okayama production and selvedge fabric focus"
+      ],
+      "issues": [
+        "The old copy is written as a long origin manifesto with many abstract claims.",
+        "Mill and partner names should be rechecked before reuse.",
+        "The current Regular Kenji fit and denim weights are more useful to shoppers."
+      ],
+      "descriptionHtml": "<p>Realign is a Dutch denim project established in 2021, drawing on Japanese selvedge fabric and American workwear references. The jeans are developed around a clear relationship between cloth, construction and fit, with production connected to Okayama's denim industry.</p><p>-//-</p><p>The current Neighbourhood selection centres on the Regular Kenji fit in 14 oz double-indigo and 17 oz selvedge denim. The heavier fabric begins firmer, while both options will change in colour and handle through wear. Browse the available Realign jeans online or visit our Arnhem store for sizing and fabric advice.</p>",
+      "seoTitle": "Realign Selvedge Denim | Neighbourhood Arnhem",
+      "metaDescription": "Explore Realign at Neighbourhood Arnhem, including Regular Kenji selvedge jeans in 14 oz double-indigo and 17 oz denim."
+    },
+    "red-wing": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Compare Red Wing boot models and find sizing advice.",
+      "retainedFromOld": [
+        "Footwear heritage dating to 1905",
+        "Leather, triple stitching and welted construction",
+        "Practical boots that move from workwear into everyday clothing"
+      ],
+      "issues": [
+        "The old copy overuses iconic, premium and durability claims.",
+        "It describes chukkas and oxfords that are not currently active.",
+        "The Moc Toe, Iron Ranger and Pecos models should guide the page."
+      ],
+      "descriptionHtml": "<p>Red Wing has made leather footwear since 1905, with work-boot construction shaping many of its best-known models. Substantial leather, stitched uppers and welted soles give the boots a firm starting point and a character that changes through regular wear.</p><p>-//-</p><p>The Red Wing selection at Neighbourhood includes Classic Moc Toe, Iron Ranger and Pecos boots, together with leather-care products. Each model differs in toe shape, height, sole and fit, so choosing the right size is important. Browse the available boots online or visit our Arnhem store for fitting and care advice.</p>",
+      "seoTitle": "Red Wing Boots | Neighbourhood Arnhem",
+      "metaDescription": "Shop Red Wing boots at Neighbourhood Arnhem, including Moc Toe, Iron Ranger and Pecos models with in-store sizing and leather-care advice."
+    },
+    "sebago": {
+      "oldScore": 3,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Sebago loafers and deck shoes by model.",
+      "retainedFromOld": [
+        "American footwear brand founded in 1946",
+        "New England and nautical references",
+        "Loafers and deck shoes as the main product categories"
+      ],
+      "issues": [
+        "The old text repeats nautical heritage and luxury language at excessive length.",
+        "It names Docksides while the active deck-shoe model is the Portland.",
+        "It gives little practical help on the Classic Dan, Classic Will and Otis."
+      ],
+      "descriptionHtml": "<p>Founded in 1946, Sebago is closely associated with American loafers and deck shoes shaped by New England footwear traditions. Leather uppers, slip-on construction and straightforward soles make the collection easy to wear with denim, chinos and relaxed tailoring.</p><p>-//-</p><p>The Neighbourhood selection includes Classic Dan and Classic Will loafers, the Otis and Paul slip-ons, and the Portland deck shoe. Differences in leather, sole and last affect both character and fit. Browse the available Sebago models online or visit our Arnhem store to compare sizes and shapes in person.</p>",
+      "seoTitle": "Sebago Loafers and Deck Shoes | Neighbourhood Arnhem",
+      "metaDescription": "Explore Sebago at Neighbourhood Arnhem, including Classic Dan and Classic Will loafers, Otis slip-ons and Portland deck shoes."
+    },
+    "steiff": {
+      "oldScore": 3,
+      "verdict": "expand",
+      "searchIntent": "Browse Steiff teddy bears and understand the Button in Ear.",
+      "retainedFromOld": [
+        "Historic German maker",
+        "Teddy bears and soft toys",
+        "Signature Button in Ear"
+      ],
+      "issues": [
+        "The old copy is useful but too short for the breadth of the active range.",
+        "It does not mention classic, dangling, suitcase or seasonal bear formats.",
+        "The wording can help distinguish Steiff from a generic soft-toy collection."
+      ],
+      "descriptionHtml": "<p>Steiff is a historic German maker of teddy bears and soft toys, recognised by the Button in Ear used to identify its animals. The collection ranges from traditional bear shapes to softer dangling forms and seasonal pieces, with size and expression giving each one a distinct character.</p><p>-//-</p><p>At Neighbourhood, the Steiff selection includes Fynn, Jimmy, Elmar, Charly and annual or Christmas bears, including a suitcase version designed for gifting. Browse the available bears online or visit our Arnhem store to compare sizes, materials and current availability in person.</p>",
+      "seoTitle": "Steiff Teddy Bears | Neighbourhood Arnhem",
+      "metaDescription": "Shop Steiff teddy bears at Neighbourhood Arnhem, including classic, dangling, suitcase and seasonal bears with the signature Button in Ear."
+    },
+    "tagliatore": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Discover Tagliatore Italian tailoring and wool blazers.",
+      "retainedFromOld": [
+        "Italian tailoring",
+        "Blazers and outerwear as the core categories",
+        "Fabric and proportion as the useful product story"
+      ],
+      "issues": [
+        "The old text is dominated by luxury, finest-fabric and discerning-gentleman language.",
+        "It describes suits and coats beyond the current two-product range.",
+        "It does not name the virgin-wool blazer or Dakar style."
+      ],
+      "descriptionHtml": "<p>Tagliatore approaches Italian tailoring through a defined shoulder, close attention to proportion and fabrics chosen to give structure without excessive stiffness. The result sits between formal suiting and a blazer that can be worn more casually.</p><p>-//-</p><p>The Neighbourhood Tagliatore selection includes a Super 110's virgin-wool blazer in navy and the Dakar style in petrol. Both products are currently hidden while stock is at zero, but the collection page retains their tailoring context for future availability. Contact our Arnhem store if you are looking for Tagliatore sizing or a particular jacket.</p>",
+      "seoTitle": "Tagliatore Italian Blazers | Neighbourhood Arnhem",
+      "metaDescription": "Discover Tagliatore at Neighbourhood Arnhem, including Italian wool blazers selected for fabric, proportion and relaxed tailoring."
+    },
+    "tenue": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Tenue jeans and casual clothing.",
+      "retainedFromOld": [
+        "Denim as the central product category",
+        "Contemporary fits and washes",
+        "Everyday comfort and wearability"
+      ],
+      "issues": [
+        "The old copy repeats premium denim and perfect-fit claims.",
+        "It does not reflect the current Penn jeans or active T-shirts.",
+        "The brand naming shifts between Tenue and Tenue.co."
+      ],
+      "descriptionHtml": "<p>Tenue approaches everyday clothing through denim, simple jersey and useful wardrobe shapes. The focus is on clear fits, wearable fabrics and washes that settle naturally into regular rotation rather than on heavily styled seasonal statements.</p><p>-//-</p><p>The current Tenue selection at Neighbourhood includes Penn jeans in Arroyo and Savannah, together with Brad and Bruce T-shirts in muted colours. Compare the denim by wash and handle, then use the jersey pieces as straightforward layers. Browse the collection online or visit our Arnhem store for help with sizing and fit.</p>",
+      "seoTitle": "Tenue Jeans and Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Shop Tenue at Neighbourhood Arnhem, including Penn jeans and Brad and Bruce T-shirts selected for clear fits, washes and everyday wear."
+    },
+    "the-brooklyn-circus": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Discover The Brooklyn Circus and its varsity and Americana clothing.",
+      "retainedFromOld": [
+        "Brooklyn identity",
+        "Varsity, military and workwear references",
+        "The brand's 100-Year Plan philosophy"
+      ],
+      "issues": [
+        "The old copy repeatedly uses timeless, iconic and made-to-last language.",
+        "It describes refined suiting that is not central to the current active range.",
+        "The current sweater, hoodie, eyewear collaboration and varsity jacket should be named."
+      ],
+      "descriptionHtml": "<p>The Brooklyn Circus brings Black Ivy, varsity, military and American workwear references into clothing with a strong sense of history. Its 100-Year Plan frames garments as part of a longer cultural story, with graphics, patches, colour and proportion carrying that point of view.</p><p>-//-</p><p>The current Neighbourhood selection includes the 1920 Sweater, a zip hoodie, a Randolph eyewear collaboration and the Classic Triple Black Varsity jacket. These pieces range from easy layers to statement outerwear while sharing the same Americana vocabulary. Browse online or visit our Arnhem store for fit and availability.</p>",
+      "seoTitle": "The Brooklyn Circus Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Explore The Brooklyn Circus at Neighbourhood Arnhem, including varsity outerwear, knitwear and accessories shaped by Black Ivy and Americana."
+    },
+    "universal-works": {
+      "oldScore": 4,
+      "verdict": "refine",
+      "searchIntent": "Browse Universal Works jackets, shirts and trousers.",
+      "retainedFromOld": [
+        "Founded by David Keyte in 2009",
+        "Honest garments informed by British workwear and subcultures",
+        "Practical shapes, small-scale production and broad fabric use"
+      ],
+      "issues": [
+        "The old 420-word history overwhelms the collection and includes store-location details irrelevant here.",
+        "It repeats heritage, authenticity and quality language.",
+        "The Baker, Cabin, cardigan, shirt and trouser selection deserves priority."
+      ],
+      "descriptionHtml": "<p>Universal Works was founded by David Keyte in 2009 with the idea of making honest, useful clothing shaped by British workwear, military garments and relaxed tailoring. Familiar forms are adjusted through proportion and fabric rather than overloaded with detail.</p><p>-//-</p><p>Neighbourhood carries a broad Universal Works selection, including Baker and Cabin jackets, overshirts, cardigans, trousers, shorts and printed shirts. Fabrics move from sturdy cotton and fleece to tweed and lighter seasonal weaves, making the pieces easy to layer across the year. Browse online or visit our Arnhem store for fit and styling advice.</p>",
+      "seoTitle": "Universal Works Menswear | Neighbourhood Arnhem",
+      "metaDescription": "Shop Universal Works at Neighbourhood Arnhem, including Baker and Cabin jackets, shirts, trousers and layers informed by British workwear."
+    },
+    "vans": {
+      "oldScore": 2,
+      "verdict": "rewrite",
+      "searchIntent": "Browse Vans Premium and Reissue footwear models.",
+      "retainedFromOld": [
+        "California origins dating to 1966",
+        "Skateboarding as the central design context",
+        "Authentic, Slip-On and mid-top shapes"
+      ],
+      "issues": [
+        "The old copy repeats self-expression, streetwear and iconic language.",
+        "It names Old Skool products and apparel not found in the active selection.",
+        "The Premium and Reissue models need to be the page focus."
+      ],
+      "descriptionHtml": "<p>Vans began in California in 1966 and became closely connected to skateboarding through simple canvas footwear and vulcanised soles. The familiar shapes remain useful beyond skating because their low profiles and direct construction work easily with denim and relaxed trousers.</p><p>-//-</p><p>The Neighbourhood selection focuses on Premium and Reissue versions of the Authentic, Slip-On and Sk8-Mid. Core black and off-white options sit alongside quieter seasonal colours. Browse the available Vans models online or visit our Arnhem store to compare the coverage, structure and fit of each shape.</p>",
+      "seoTitle": "Vans Premium Footwear | Neighbourhood Arnhem",
+      "metaDescription": "Explore Vans Premium and Reissue footwear at Neighbourhood Arnhem, including Authentic, Slip-On and Sk8-Mid models in considered colours."
+    },
+    "william-lockie": {
+      "oldScore": 3,
+      "verdict": "refine",
+      "searchIntent": "Browse William Lockie lambswool and merino knitwear.",
+      "retainedFromOld": [
+        "Knitwear heritage dating to 1874",
+        "Cashmere, lambswool and merino as important fibres",
+        "Traditional crewneck, V-neck and cardigan forms"
+      ],
+      "issues": [
+        "The old copy relies heavily on luxury and timeless-elegance language.",
+        "It mentions scarves, hats and boardroom styling outside the current selection.",
+        "The current lambswool and merino models should guide the page."
+      ],
+      "descriptionHtml": "<p>William Lockie has specialised in Scottish knitwear since 1874, working with fibres such as lambswool, merino and cashmere. The collection is built around familiar shapes and colour, allowing the yarn, gauge and handle to remain more important than decorative detail.</p><p>-//-</p><p>At Neighbourhood, the William Lockie selection includes crewnecks, V-necks and a fine merino short-sleeve knit in navy, bordeaux, cocoa and seasonal shades. Different fibres and weights make it possible to choose between a warm outer layer and a lighter piece worn closer to the body. Visit our Arnhem store to compare fit and feel.</p>",
+      "seoTitle": "William Lockie Knitwear | Neighbourhood Arnhem",
+      "metaDescription": "Shop William Lockie at Neighbourhood Arnhem, including Scottish lambswool and merino crewnecks, V-necks and lighter knitted layers."
+    }
+  }
+}

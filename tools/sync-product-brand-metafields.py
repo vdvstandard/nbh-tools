@@ -13,7 +13,7 @@ from datetime import datetime
 
 DEFAULT_API_VERSION = '2026-04'
 DEFAULT_NAMESPACE = 'custom'
-DEFAULT_KEY = 'brands'
+DEFAULT_KEY = 'brand'
 MAX_METAFIELDS_PER_MUTATION = 25
 
 
@@ -176,17 +176,20 @@ def format_value(value):
     return '(blank)' if value == '' else json.dumps(value)
 
 
-def build_plan(products, metafield_type):
-    plan = {'correct': [], 'updates': [], 'skippedBlankVendor': []}
+def build_plan(products, metafield_type, only_blank=False):
+    plan = {'correct': [], 'updates': [], 'skippedBlankVendor': [], 'skippedExistingValue': []}
     for product in products:
         vendor = (product.get('vendor') or '').strip()
         if not vendor:
             plan['skippedBlankVendor'].append(product)
             continue
         desired_value = metafield_value_for_vendor(vendor, metafield_type)
-        current_value = product.get('metafield', {}).get('value', '')
+        current_value = (product.get('metafield') or {}).get('value', '')
         if current_value == desired_value:
             plan['correct'].append(product)
+            continue
+        if only_blank and current_value:
+            plan['skippedExistingValue'].append({'product': product, 'currentValue': current_value, 'desiredValue': desired_value})
             continue
         plan['updates'].append({'product': product, 'currentValue': current_value, 'desiredValue': desired_value})
     return plan
@@ -212,6 +215,11 @@ def validate_supported_type(metafield_type):
 
 
 def get_definition_type(endpoint, token, namespace, key):
+    definition = get_definition(endpoint, token, namespace, key)
+    return definition.get('type', {}).get('name', '') if definition else ''
+
+
+def get_definition(endpoint, token, namespace, key):
     query = '''
     query BrandMetafieldDefinition($namespace: String!, $key: String!) {
       metafieldDefinitions(
@@ -221,18 +229,200 @@ def get_definition_type(endpoint, token, namespace, key):
         first: 1
       ) {
         nodes {
+          id
           name
           namespace
           key
           type {
             name
           }
+          validations {
+            name
+            value
+          }
         }
       }
     }
   '''
     data = shopify_graphql(endpoint, token, query, {'namespace': namespace, 'key': key})
-    return data.get('metafieldDefinitions', {}).get('nodes', [{}])[0].get('type', {}).get('name', '')
+    nodes = data.get('metafieldDefinitions', {}).get('nodes', [])
+    if not nodes:
+        return None
+    return nodes[0]
+
+
+def get_choices(definition):
+    if not definition:
+        return []
+    for validation in definition.get('validations') or []:
+        if validation.get('name') == 'choices':
+            try:
+                choices = json.loads(validation.get('value') or '[]')
+            except json.JSONDecodeError:
+                return []
+            return choices if isinstance(choices, list) else []
+    return []
+
+
+def find_missing_choices(plan, choices):
+    if not choices:
+        return []
+    existing = set(str(choice) for choice in choices)
+    desired = []
+    for item in plan['updates']:
+        value = item.get('desiredValue')
+        if value and value not in existing:
+            desired.append(value)
+    return sorted(set(desired), key=lambda value: value.lower())
+
+
+def update_definition_choices(endpoint, token, definition, choices):
+    result = shopify_graphql(endpoint, token, '''
+    mutation UpdateBrandChoices($definition: MetafieldDefinitionUpdateInput!) {
+      metafieldDefinitionUpdate(definition: $definition) {
+        updatedDefinition {
+          id
+          name
+          namespace
+          key
+          validations {
+            name
+            value
+          }
+        }
+        userErrors {
+          field
+          message
+          code
+        }
+      }
+    }
+  ''', {
+        'definition': {
+            'ownerType': 'PRODUCT',
+            'namespace': definition['namespace'],
+            'key': definition['key'],
+            'validations': [
+                {
+                    'name': 'choices',
+                    'value': json.dumps(choices, separators=(',', ':')),
+                },
+            ],
+        },
+    })
+    payload = result.get('metafieldDefinitionUpdate', {})
+    user_errors = payload.get('userErrors', [])
+    if user_errors:
+        details = '\n'.join(f"{error.get('code', 'ERROR')} {'.'.join(error.get('field', [])) if error.get('field') else ''}: {error.get('message')}" for error in user_errors)
+        raise RuntimeError(f'Shopify rejected metafieldDefinitionUpdate:\n{details}')
+    return payload.get('updatedDefinition')
+
+
+def get_metafield_definitions(endpoint, token):
+    query = '''
+    query ProductMetafieldDefinitions {
+      metafieldDefinitions(ownerType: PRODUCT, first: 100) {
+        nodes {
+          id
+          name
+          namespace
+          key
+          type {
+            name
+          }
+          validations {
+            name
+            value
+          }
+        }
+      }
+    }
+  '''
+    data = shopify_graphql(endpoint, token, query, {})
+    return data.get('metafieldDefinitions', {}).get('nodes', [])
+
+
+def inspect_product(endpoint, token, handle, namespace, key):
+    query = '''
+    query InspectProductMetafields($handle: String!, $namespace: String!, $key: String!) {
+      productByHandle(handle: $handle) {
+        id
+        title
+        handle
+        vendor
+        metafield(namespace: $namespace, key: $key) {
+          id
+          namespace
+          key
+          type
+          value
+          definition {
+            name
+          }
+        }
+        metafields(first: 100) {
+          nodes {
+            id
+            namespace
+            key
+            type
+            value
+            definition {
+              name
+            }
+          }
+        }
+      }
+    }
+  '''
+    data = shopify_graphql(endpoint, token, query, {'handle': handle, 'namespace': namespace, 'key': key})
+    return data.get('productByHandle')
+
+
+def print_inspection(product, definitions, namespace, key):
+    print('\nMetafield inspection:')
+    if not product:
+        print('Product not found.')
+        return
+    print(f"Product: {product.get('title')} ({product.get('handle')})")
+    print(f"Vendor: {product.get('vendor') or '(blank)'}")
+    configured = product.get('metafield')
+    if configured:
+        definition_name = (configured.get('definition') or {}).get('name') or '(no definition)'
+        print(f"Configured {namespace}.{key}: {format_value(configured.get('value') or '')} [{configured.get('type')}; {definition_name}]")
+    else:
+        print(f"Configured {namespace}.{key}: (missing)")
+
+    brandish_definitions = [
+        definition for definition in definitions
+        if 'brand' in (definition.get('name') or '').lower()
+        or 'brand' in (definition.get('key') or '').lower()
+    ]
+    if brandish_definitions:
+        print('\nBrand-like product metafield definitions:')
+        for definition in brandish_definitions:
+            print(f"- {definition.get('name')} -> {definition.get('namespace')}.{definition.get('key')} [{definition.get('type', {}).get('name')}]")
+            validations = definition.get('validations') or []
+            for validation in validations:
+                print(f"  validation {validation.get('name')}: {validation.get('value')}")
+
+    metafields = product.get('metafields', {}).get('nodes', [])
+    if metafields:
+        print('\nProduct metafields on this product:')
+        for metafield in metafields:
+            definition_name = (metafield.get('definition') or {}).get('name') or '(no definition)'
+            print(f"- {metafield.get('namespace')}.{metafield.get('key')}: {format_value(metafield.get('value') or '')} [{metafield.get('type')}; {definition_name}]")
+
+
+def print_skipped_existing_value_sample(skipped):
+    if not skipped:
+        return
+    print('\nSkipped existing non-blank values:')
+    for item in skipped[:10]:
+        product = item['product']
+        print(f"- {product['title']} ({product['handle']}): kept {format_value(item['currentValue'])}, desired would be {format_value(item['desiredValue'])}")
+    if len(skipped) > 10:
+        print(f'...and {len(skipped) - 10} more.')
 
 
 def get_products(endpoint, token, namespace, key, page_size, limit):
@@ -292,6 +482,9 @@ def main():
     parser.add_argument('--type', help='Explicit metafield type override.')
     parser.add_argument('--limit', type=int, help='Limit number of products to scan.')
     parser.add_argument('--page-size', type=int, default=100, help='Product page size (1-250).')
+    parser.add_argument('--only-blank', action='store_true', help='Only populate blank metafield values; keep existing non-blank values.')
+    parser.add_argument('--ensure-choices', action='store_true', help='Add missing desired values to the metafield choices validation before applying.')
+    parser.add_argument('--inspect-handle', help='Inspect one product handle and print its brand-related metafields.')
     parser.add_argument('--env-file', help='Path to .env. Default: ../.env relative to this script.')
 
     args = parser.parse_args()
@@ -326,9 +519,16 @@ def main():
         token = token_response['access_token']
         print(f"Temporary token acquired. Scope: {token_response.get('scope', '(not returned)')}. Not stored in .env.")
 
+    if args.inspect_handle:
+        definitions = get_metafield_definitions(endpoint, token)
+        product = inspect_product(endpoint, token, args.inspect_handle, namespace, key)
+        print_inspection(product, definitions, namespace, key)
+        return
+
     print(f"{ 'Apply' if args.apply else 'Dry run' }: syncing {namespace}.{key} to product vendor on {shop}")
 
-    definition_type = get_definition_type(endpoint, token, namespace, key)
+    definition = get_definition(endpoint, token, namespace, key)
+    definition_type = definition.get('type', {}).get('name', '') if definition else ''
     products = get_products(endpoint, token, namespace, key, page_size, limit)
     existing_type = next((p.get('metafield', {}).get('type') for p in products if p.get('metafield', {}).get('type')), '')
     metafield_type = definition_type or existing_type or explicit_type
@@ -337,7 +537,7 @@ def main():
         raise RuntimeError(f'Could not determine the metafield type for {namespace}.{key}. Add a Shopify metafield definition or pass --type.')
 
     validate_supported_type(metafield_type)
-    plan = build_plan(products, metafield_type)
+    plan = build_plan(products, metafield_type, args.only_blank)
 
     print(f'Metafield type: {metafield_type}')
     if not definition_type and existing_type:
@@ -351,12 +551,37 @@ def main():
     print(f'Already correct: {len(plan['correct'])}')
     print(f'Needs update: {len(plan['updates'])}')
     print(f'Skipped without vendor: {len(plan['skippedBlankVendor'])}')
+    print(f'Skipped existing non-blank values: {len(plan['skippedExistingValue'])}')
 
     print_sample(plan['updates'], metafield_type)
+    print_skipped_existing_value_sample(plan['skippedExistingValue'])
+
+    choices = get_choices(definition)
+    missing_choices = find_missing_choices(plan, choices)
+    if choices:
+        print(f'Choices available: {len(choices)}')
+        print(f'Missing choices for planned updates: {len(missing_choices)}')
+        for value in missing_choices[:20]:
+            print(f'- missing choice: {value}')
+        if len(missing_choices) > 20:
+            print(f'...and {len(missing_choices) - 20} more missing choices.')
 
     if not args.apply:
         print('\nNo changes were written. Re-run with --apply to update Shopify.')
         return
+
+    if missing_choices:
+        if not args.ensure_choices:
+            raise SystemExit('\nMissing choices prevent this apply. Re-run with --ensure-choices --apply to extend the Shopify metafield definition first.')
+        if not definition:
+            raise RuntimeError(f'Cannot update choices because {namespace}.{key} has no Shopify metafield definition.')
+        updated_choices = list(choices)
+        for value in missing_choices:
+            if value not in updated_choices:
+                updated_choices.append(value)
+        updated_definition = update_definition_choices(endpoint, token, definition, updated_choices)
+        print(f'\nUpdated Shopify choices: {len(choices)} -> {len(updated_choices)}')
+        choices = get_choices(updated_definition)
 
     if not plan['updates']:
         print('\nNothing to update.')
