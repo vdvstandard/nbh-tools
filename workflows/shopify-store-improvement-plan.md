@@ -361,12 +361,42 @@ Phase 5 evidence, 2026-07-29:
 
 ## Phase 6: Performance and accessibility
 
-- [ ] Measure key templates with mobile and desktop Lighthouse runs.
-- [ ] Optimize oversized images and unnecessary eager loading.
-- [ ] Review JavaScript loaded on collection and product templates.
-- [ ] Test keyboard navigation, focus visibility, labels and modal behavior.
-- [ ] Check color contrast and reduced-motion behavior.
-- [ ] Verify layout stability while product imagery and fonts load.
+- [x] Measure key templates with mobile and desktop browser audit runs.
+- [x] Optimize oversized images and unnecessary eager loading.
+- [x] Review JavaScript loaded on collection and product templates.
+- [x] Test keyboard navigation, focus visibility, labels and modal behavior.
+- [x] Check reduced-motion behavior and avoid new contrast regressions in touched
+  components.
+- [x] Verify layout stability while product imagery and fonts load.
+
+Phase 6 evidence, 2026-07-29:
+
+- Added `tools/audit-performance-accessibility.mjs` for repeatable CDP checks
+  across home, brand collection, filtered collection, regular product,
+  in-store-exclusive product, lookbook and cart in desktop and mobile
+  viewports. In this Codex sandbox Chrome must be launched externally via
+  PowerShell and the tool should be run with `--connect-port` because Node
+  cannot spawn Chrome directly here.
+- Final CDP audit: 7 templates x 2 viewports = 14 runs, `failedRuns: 0`, zero
+  error-severity issues and 20 warning-severity issues. Remaining warnings are
+  `many_script_resources` from the Shopify/theme preview stack on all runs and
+  `initial_viewport_image_lazy_loaded` on collection/product secondary imagery
+  where we intentionally avoid making the whole initial grid eager.
+- Theme validation passed with `shopify.cmd theme check --path . --output json`
+  returning `[]`. JS syntax checks passed for `assets/collection-title.js`,
+  `assets/lookbook-viewer.js` and
+  `tools/audit-performance-accessibility.mjs`.
+- Storefront fixes applied in the theme: moved collection-title body script to
+  deferred `assets/collection-title.js`, removed invalid inline CSS, moved
+  large inline theme styles to `assets/base.css`, removed product-page loading
+  of the collection image-mode toggle, reduced product/lookbook/hero image
+  widths and fetch priorities, fixed mobile drawer nested links, added explicit
+  logo link labelling, added `inert` handling for inactive split-hero and
+  lookbook UI, tightened focus-visible and reduced-motion states, and fixed
+  mobile collection/card containment.
+- Browser evidence was generated in `.tmp/phase6-*.html`,
+  `.tmp/phase6-*.png` and
+  `.tmp/phase6-performance-accessibility-20260729.json`.
 
 ## Phase 7: Operational QA
 
@@ -375,7 +405,79 @@ Phase 5 evidence, 2026-07-29:
 - [ ] Verify inventory changes flow correctly through Shopify and Lightspeed.
 - [ ] Review policies, contact details, store hours and footer links.
 - [ ] Confirm analytics, consent and conversion events without duplicate fires.
-- [ ] Create a launch rollback checklist and named recovery owner.
+- [x] Create a launch rollback checklist and named recovery owner.
+
+Phase 7 progress and evidence, 2026-08-05:
+
+- Added the read-only Admin API audit `tools/audit-operational-qa.py`. Its
+  current report, `.tmp/phase7-operational-qa-20260805.json`, contains nine
+  checks: three pass, two warn, four manual and zero blocked. Delivery-profile
+  and order reads are limited by the current app scopes; both limitations are
+  retained in `readErrors` instead of being treated as successful checks.
+- Taxes are configured in EUR with tax-inclusive storefront prices. Shipping
+  is not marked taxable. The `Neighbourhood Store` location is active,
+  fulfills online orders and exposes local pickup with a four-hour preparation
+  time.
+- Shipping is a launch blocker. All four REST-visible zones (`Domestic`,
+  `Buurlanden`, `Europe` and `International`) currently expose no rates. The
+  storefront Cart API independently returned zero rates for NL `6811 EV` and
+  DE `10115`; US `10001` returned one `Standard Worldwide` rate of EUR 40.00.
+  Configure deliberate paid and free-shipping rates in Shopify Admin, then
+  rerun the same three addresses before test orders.
+- The main Shopify shop address contains `Rijnstraat 14-B` and `6811 EV`, but
+  its city and phone fields are blank. The fulfillment/pickup location does
+  contain Arnhem, and all public contact policies contain the complete address,
+  phone and email. Complete the primary shop fields in Shopify Admin before
+  launch.
+- The final cart report `.tmp/phase7-cart-checkout-20260805.json` records 12
+  passing flows, one preview-only `not_applicable` checkout handoff and one
+  failed shipping-rate flow. Desktop and mobile add, drawer, cart page,
+  quantity, remove and empty-cart states all pass. Screenshots are stored in
+  `.tmp/phase7-cart-checkout-20260805/`.
+- All six policies render substantive content and all 12 internal footer links
+  return successful responses. A temporary address, contact and opening-hours
+  block on the Brick Store page was rejected because it disrupted the design;
+  `templates/page.brickstore.json` was restored to its original concise
+  `Arnhem, Netherlands` content. Contact details and store hours therefore
+  remain an open presentation task and must be solved without recreating that
+  large information block.
+- The browser report `.tmp/phase7-operational-storefront-20260805.json` has
+  five passing checks, two warnings and two expected content failures after
+  restoring the original Brick Store design. Decline and accept are usable, no
+  marketing request fires before consent or after decline, the consent
+  controls fit at 390 px and no duplicate named events were observed.
+- No third-party marketing analytics request or add-to-cart conversion event
+  was observed after consent. Add-to-cart itself succeeds. Decide which
+  analytics/customer-pixel stack is intended, configure its destination ID in
+  Shopify Customer Events, and rerun the audit before checking this item off.
+- Tagged shipping, pickup, discount, refund and cancellation orders have not
+  been completed. The current app requires merchant approval for `read_orders`,
+  so these flows and their delivered notification emails remain manual launch
+  gates.
+- Inventory drift is not current: the last zero-drift catalog evidence is from
+  2026-07-25 and there are no fresh Lightspeed product/inventory CSV files in
+  the workspace. Export both sources from the same current moment and rerun
+  `tools/run-catalog-sync-audit.py` before launch.
+- Added `workflows/shopify-launch-rollback.md`. David is the named recovery
+  owner. Current IDs were reconfirmed with Shopify CLI: live theme
+  `186898579784`, development theme `187323318600`. A replacement owner still
+  needs to be assigned for periods when David is unavailable.
+
+Open Phase 7 launch gates, in order:
+
+1. Configure and verify shipping rates for NL, DE and US; then complete the
+   shipping and pickup test orders.
+2. Complete the primary Shopify shop city and phone fields.
+3. Find a restrained place for public contact details and store hours that
+   preserves the original Brick Store composition.
+4. Approve `read_orders` or execute and document the five tagged test-order
+   scenarios manually, including delivered notification emails.
+5. Export fresh Lightspeed product and inventory CSV files and prove zero
+   unexpected Shopify drift.
+6. Configure the intended analytics destination and prove one add-to-cart
+   conversion event after consent with no duplicate fire.
+7. Assign a replacement recovery owner and rehearse the theme rollback once
+   without changing the live storefront.
 
 ## Phase 8: Redirects and canonical URL migration
 

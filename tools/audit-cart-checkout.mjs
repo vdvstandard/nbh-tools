@@ -13,6 +13,7 @@ function parseArgs(argv) {
     chrome: DEFAULT_CHROME,
     baseUrl: "http://127.0.0.1:9292",
     port: 9360,
+    connectToExistingChrome: false,
     report: ".tmp\\phase5-cart-checkout-20260729.json",
     screenshotDir: ".tmp\\phase5-cart-checkout-20260729",
     product: "thuy-t-shirt-aran-creme",
@@ -23,6 +24,10 @@ function parseArgs(argv) {
     if (key === "--chrome") args.chrome = value;
     else if (key === "--base-url") args.baseUrl = value;
     else if (key === "--port") args.port = Number(value);
+    else if (key === "--connect-port") {
+      args.port = Number(value);
+      args.connectToExistingChrome = true;
+    }
     else if (key === "--report") args.report = value;
     else if (key === "--screenshot-dir") args.screenshotDir = value;
     else if (key === "--product") args.product = value;
@@ -244,6 +249,89 @@ async function readCartJson(client) {
   );
 }
 
+async function readShippingRates(client, address) {
+  return evaluate(
+    client,
+    `(async () => {
+      const address = ${JSON.stringify(address)};
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(address)) {
+        params.set('shipping_address[' + key + ']', value);
+      }
+      const suffix = params.toString();
+      const prepareResponse = await fetch('/cart/prepare_shipping_rates.json?' + suffix, {
+        method: 'POST',
+        headers: { Accept: 'application/json' }
+      });
+      const prepareText = await prepareResponse.text();
+      let lastStatus = null;
+      let lastBody = '';
+      for (let attempt = 0; attempt < 16; attempt += 1) {
+        const response = await fetch('/cart/async_shipping_rates.json?' + suffix, {
+          headers: { Accept: 'application/json' }
+        });
+        const text = await response.text();
+        lastStatus = response.status;
+        lastBody = text.slice(0, 500);
+        if (!response.ok) {
+          return {
+            address,
+            prepareStatus: prepareResponse.status,
+            prepareBody: prepareText.slice(0, 500),
+            status: response.status,
+            body: lastBody,
+            rates: [],
+            passed: false
+          };
+        }
+        const parsed = text ? JSON.parse(text) : null;
+        if (parsed?.shipping_rates) {
+          return {
+            address,
+            prepareStatus: prepareResponse.status,
+            prepareBody: prepareText.slice(0, 500),
+            status: response.status,
+            body: lastBody,
+            rates: parsed.shipping_rates.map((rate) => ({
+              name: rate.name,
+              price: rate.price,
+              source: rate.source,
+              deliveryDate: rate.delivery_date,
+              deliveryRange: rate.delivery_range
+            })),
+            passed: parsed.shipping_rates.length > 0
+          };
+        }
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+      return {
+        address,
+        prepareStatus: prepareResponse.status,
+        prepareBody: prepareText.slice(0, 500),
+        status: lastStatus,
+        body: lastBody,
+        rates: [],
+        passed: false,
+        timedOut: true
+      };
+    })()`,
+  );
+}
+
+async function testShippingRates(client) {
+  const destinations = [
+    { label: "Netherlands", country: "NL", zip: "6811EV" },
+    { label: "Germany", country: "DE", zip: "10115" },
+    { label: "United States", country: "US", province: "NY", zip: "10001" },
+  ];
+  const results = [];
+  for (const destination of destinations) {
+    const { label, ...address } = destination;
+    results.push({ label, ...(await readShippingRates(client, address)) });
+  }
+  return results;
+}
+
 async function addProduct(client, baseUrl, productHandle) {
   await navigate(client, `${baseUrl}/products/${productHandle}`);
   const productState = await evaluate(
@@ -385,7 +473,7 @@ async function clickDrawerQuantityPlus(client) {
 }
 
 async function readCartPageState(client, baseUrl) {
-  await navigate(client, `${baseUrl}/cart`);
+  await navigate(client, `${baseUrl}/cart?_qa=${Date.now()}`);
   return evaluate(
     client,
     `(() => {
@@ -412,10 +500,14 @@ async function readCartPageState(client, baseUrl) {
         url: location.href,
         title: document.title,
         cartVisible: isVisible('cart-items'),
+        cartClasses: document.querySelector('cart-items')?.className || '',
         quantityInputDefined: Boolean(customElements.get('quantity-input')),
         cartItemsDefined: Boolean(customElements.get('cart-items')),
-        emptyTextVisible: isVisible('.cart__empty-text'),
-        continueShoppingVisible: isVisible('.title-wrapper-with-link a, .cart__warnings a.button'),
+        emptyWarningsPresent: Boolean(document.querySelector('cart-items .cart__warnings')),
+        emptyTextVisible: isVisible('cart-items .cart__empty-text'),
+        continueShoppingVisible: [...document.querySelectorAll(
+          'cart-items .title-wrapper-with-link a, cart-items .cart__warnings a.button'
+        )].some(isVisible),
         lineItems,
         checkoutVisible: isVisible(checkout),
         checkoutDisabled: Boolean(checkout?.disabled),
@@ -736,23 +828,28 @@ async function run() {
   const profilePath = path.resolve(`.tmp\\chrome-cart-checkout-${process.pid}`);
   await mkdir(path.dirname(reportPath), { recursive: true });
   await mkdir(screenshotDir, { recursive: true });
-  await mkdir(profilePath, { recursive: true });
+  if (!args.connectToExistingChrome) {
+    await mkdir(profilePath, { recursive: true });
+  }
 
-  const chrome = spawn(
-    args.chrome,
-    [
-      "--headless=new",
-      "--disable-gpu",
-      "--window-size=1440,900",
-      `--remote-debugging-port=${args.port}`,
-      `--user-data-dir=${profilePath}`,
-      "about:blank",
-    ],
-    {
-      stdio: "ignore",
-      windowsHide: true,
-    },
-  );
+  let chrome;
+  if (!args.connectToExistingChrome) {
+    chrome = spawn(
+      args.chrome,
+      [
+        "--headless=new",
+        "--disable-gpu",
+        "--window-size=1440,900",
+        `--remote-debugging-port=${args.port}`,
+        `--user-data-dir=${profilePath}`,
+        "about:blank",
+      ],
+      {
+        stdio: "ignore",
+        windowsHide: true,
+      },
+    );
+  }
 
   let client;
   try {
@@ -761,6 +858,8 @@ async function run() {
     const consoleMessages = [];
     const documentResponses = [];
     const networkFailures = [];
+    const cartRequests = new Map();
+    const responseBodyTasks = [];
     client.on("Runtime.consoleAPICalled", (event) => {
       consoleMessages.push({
         type: event.type,
@@ -779,6 +878,20 @@ async function run() {
         ],
       });
     });
+    client.on("Network.requestWillBeSent", (event) => {
+      const url = event.request?.url || "";
+      const isCartEndpoint =
+        url.includes("/cart/add") ||
+        url.includes("/cart/change") ||
+        url.includes("/cart/clear") ||
+        url.includes("/cart.js") ||
+        url.includes("/cart?");
+      if (!isCartEndpoint) return;
+      cartRequests.set(event.requestId, {
+        method: event.request.method,
+        postData: event.request.postData || "",
+      });
+    });
     client.on("Network.responseReceived", (event) => {
       const url = event.response.url || "";
       const isCartEndpoint =
@@ -788,12 +901,29 @@ async function run() {
         url.includes("/cart.js") ||
         url.includes("/cart?");
       if (event.type !== "Document" && !isCartEndpoint) return;
-      documentResponses.push({
+      const request = cartRequests.get(event.requestId) || {};
+      const responseRecord = {
         type: event.type,
         url,
         status: event.response.status,
         mimeType: event.response.mimeType,
-      });
+        method: request.method || "",
+        postData: request.postData || "",
+      };
+      documentResponses.push(responseRecord);
+      if (!isCartEndpoint || event.response.status < 400) return;
+      const bodyTask = (async () => {
+        try {
+          await sleep(100);
+          const body = await client.send("Network.getResponseBody", {
+            requestId: event.requestId,
+          });
+          responseRecord.responseBody = (body.body || "").slice(0, 2000);
+        } catch (error) {
+          responseRecord.responseBodyError = error.message;
+        }
+      })();
+      responseBodyTasks.push(bodyTask);
     });
     client.on("Network.loadingFailed", (event) => {
       networkFailures.push({
@@ -812,6 +942,7 @@ async function run() {
       height: 900,
       mobile: false,
     });
+    const shippingRates = await testShippingRates(client);
     await capture(client, path.join(screenshotDir, "desktop-cart-page.png"));
     const checkoutHandoff = await testCheckoutHandoff(client);
     await navigate(client, `${baseUrl}/cart`);
@@ -827,6 +958,7 @@ async function run() {
     await capture(client, path.join(screenshotDir, "mobile-cart-page.png"));
     const mobileRemoved = await removeCartLine(client);
     const mobileEmptyCart = await readCartPageState(client, baseUrl);
+    await Promise.allSettled(responseBodyTasks);
 
     const flows = [
       buildFlowResult(
@@ -891,6 +1023,12 @@ async function run() {
           cartPage: desktop.cartPageAfterDecrease,
           cart: desktop.cartAfterDecrease,
         },
+      ),
+      buildFlowResult(
+        "desktop_shipping_rates",
+        "Desktop shipping rates",
+        pass(shippingRates.every((destination) => destination.passed)),
+        { destinations: shippingRates },
       ),
       buildFlowResult(
         "desktop_checkout_handoff",
@@ -1017,19 +1155,21 @@ async function run() {
     process.exitCode = summary.errors ? 1 : 0;
   } finally {
     client?.close();
-    if (!chrome.killed) chrome.kill();
-    await sleep(500);
-    try {
-      await rm(profilePath, {
-        recursive: true,
-        force: true,
-        maxRetries: 5,
-        retryDelay: 250,
-      });
-    } catch (error) {
-      process.stderr.write(
-        `Warning: could not remove Chrome profile ${profilePath}: ${error.message}\n`,
-      );
+    if (chrome && !chrome.killed) chrome.kill();
+    if (!args.connectToExistingChrome) {
+      await sleep(500);
+      try {
+        await rm(profilePath, {
+          recursive: true,
+          force: true,
+          maxRetries: 5,
+          retryDelay: 250,
+        });
+      } catch (error) {
+        process.stderr.write(
+          `Warning: could not remove Chrome profile ${profilePath}: ${error.message}\n`,
+        );
+      }
     }
   }
 }
