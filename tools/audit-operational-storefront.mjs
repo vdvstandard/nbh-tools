@@ -286,6 +286,16 @@ async function readConsentLayout(client) {
   );
 }
 
+async function waitForConsentLayout(client, attempts = 40) {
+  let layout = await readConsentLayout(client);
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    if (layout.visibleDecisionButtonCount) return layout;
+    await sleep(250);
+    layout = await readConsentLayout(client);
+  }
+  return layout;
+}
+
 async function clickConsent(client, intent) {
   const words = intent === "accept" ? ["accept all", "accept"] : ["decline all", "decline"];
   const clicked = await evaluate(
@@ -478,6 +488,14 @@ async function run() {
     await client.send("Runtime.enable");
     await client.send("Network.enable");
     await clearVisitorData(client, origin);
+
+    await setViewport(client, 390, 844, true);
+    phase = "mobile_initial_consent_layout";
+    await navigate(client, `${baseUrl}/?_qa=mobile-initial-consent`);
+    const initialMobilePrivacy = await waitForPrivacyUi(client);
+    const initialMobileConsentLayout = await waitForConsentLayout(client);
+
+    await clearVisitorData(client, origin);
     await setViewport(client, 1440, 900);
 
     phase = "before_consent";
@@ -508,7 +526,7 @@ async function run() {
     await navigate(client, `${baseUrl}/?_qa=mobile-consent`);
     const preferencesReopenedForMobile = await showConsentPreferences(client);
     await waitForPrivacyUi(client);
-    const mobileConsentLayout = await readConsentLayout(client);
+    const mobileConsentLayout = await waitForConsentLayout(client);
     const declinedFromMobilePreferences = await clickConsent(client, "decline");
     phase = "after_mobile_decline";
     await navigate(client, `${baseUrl}/?_qa=mobile-declined`);
@@ -610,13 +628,23 @@ async function run() {
       ),
       makeCheck(
         "mobile_consent_layout",
-        mobileConsentLayout.visibleDecisionButtonCount && mobileConsentLayout.decisionButtonsFit
+        initialMobileConsentLayout.visibleDecisionButtonCount &&
+          initialMobileConsentLayout.decisionButtonsFit &&
+          mobileConsentLayout.visibleDecisionButtonCount &&
+          mobileConsentLayout.decisionButtonsFit
           ? "pass"
           : "fail",
-        mobileConsentLayout.visibleDecisionButtonCount && mobileConsentLayout.decisionButtonsFit
-          ? "Consent controls fit within a 390px mobile viewport."
-          : "Consent controls overflow or were not found in a 390px mobile viewport.",
-        mobileConsentLayout,
+        initialMobileConsentLayout.visibleDecisionButtonCount &&
+          initialMobileConsentLayout.decisionButtonsFit &&
+          mobileConsentLayout.visibleDecisionButtonCount &&
+          mobileConsentLayout.decisionButtonsFit
+          ? "Initial consent and preference controls fit within a 390px mobile viewport."
+          : "Initial consent or preference controls overflow or were not found in a 390px mobile viewport.",
+        {
+          initialPrivacy: initialMobilePrivacy,
+          initialBanner: initialMobileConsentLayout,
+          preferences: mobileConsentLayout,
+        },
       ),
       makeCheck(
         "analytics_after_consent",

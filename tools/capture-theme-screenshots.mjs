@@ -189,15 +189,19 @@ async function run() {
   await mkdir(profilePath, { recursive: true });
 
   const pages = [
+    ["home", "/"],
     ["collection-drakes", "/collections/drakes"],
     ["collection-filter-drakes", "/collections/all?filter.p.m.custom.brand=Drake%27s"],
     ["collection-akog", "/collections/a-kind-of-guise"],
     ["collection-in-store-exclusive", "/collections/in-store-exclusive"],
-    ["product-regular", "/products/thuy-t-shirt-aran-creme"],
-    ["product-in-store-exclusive", "/products/beira-solid-black-dark-grey"],
+    ["product-regular", "/products/beanie-onyx"],
+    ["product-in-store-exclusive", "/products/thuy-t-shirt-aran-creme"],
     ["search-drake", "/search?q=drake&options%5Bprefix%5D=last"],
     ["contact-policy", "/policies/contact-information"],
+    ["journal", "/blogs/journal"],
+    ["journal-article", "/blogs/journal/a-kind-of-guise"],
     ["lookbook", "/pages/lookbook"],
+    ["cart", "/cart"],
   ];
   const viewports = [
     { name: "desktop", width: 1440, height: 900, mobile: false },

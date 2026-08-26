@@ -17,10 +17,16 @@ function parseArgs(argv) {
     report: ".tmp\\phase5-cart-checkout-20260729.json",
     screenshotDir: ".tmp\\phase5-cart-checkout-20260729",
     product: "thuy-t-shirt-aran-creme",
+    shippingQuantity: 1,
+    shippingOnly: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const key = argv[index];
     const value = argv[index + 1];
+    if (key === "--shipping-only") {
+      args.shippingOnly = true;
+      continue;
+    }
     if (key === "--chrome") args.chrome = value;
     else if (key === "--base-url") args.baseUrl = value;
     else if (key === "--port") args.port = Number(value);
@@ -31,6 +37,7 @@ function parseArgs(argv) {
     else if (key === "--report") args.report = value;
     else if (key === "--screenshot-dir") args.screenshotDir = value;
     else if (key === "--product") args.product = value;
+    else if (key === "--shipping-quantity") args.shippingQuantity = Number(value);
     else continue;
     index += 1;
   }
@@ -330,6 +337,57 @@ async function testShippingRates(client) {
     results.push({ label, ...(await readShippingRates(client, address)) });
   }
   return results;
+}
+
+async function setShippingCartQuantity(client, quantity) {
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    throw new Error("Shipping quantity must be a positive integer.");
+  }
+  return evaluate(
+    client,
+    `(async () => {
+      const cartResponse = await fetch('/cart.js', {
+        headers: { Accept: 'application/json' }
+      });
+      const cart = await cartResponse.json();
+      const item = cart.items?.[0];
+      if (!item) return { passed: false, reason: 'Cart has no line item.' };
+      if (item.quantity !== ${JSON.stringify(quantity)}) {
+        const changeResponse = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: item.key, quantity: ${JSON.stringify(quantity)} })
+        });
+        if (!changeResponse.ok) {
+          return {
+            passed: false,
+            status: changeResponse.status,
+            body: (await changeResponse.text()).slice(0, 500)
+          };
+        }
+      }
+      const updatedResponse = await fetch('/cart.js', {
+        headers: { Accept: 'application/json' }
+      });
+      const updated = await updatedResponse.json();
+      return {
+        passed: updated.item_count === ${JSON.stringify(quantity)},
+        itemCount: updated.item_count,
+        totalPrice: updated.total_price,
+        currency: updated.currency,
+        items: updated.items.map((line) => ({
+          title: line.product_title,
+          variantTitle: line.variant_title,
+          quantity: line.quantity,
+          price: line.price,
+          finalLinePrice: line.final_line_price
+        }))
+      };
+    })()`,
+  );
 }
 
 async function addProduct(client, baseUrl, productHandle) {
@@ -936,12 +994,55 @@ async function run() {
     await client.send("Runtime.enable");
     await client.send("Network.enable");
 
+    if (args.shippingOnly) {
+      await setViewport(client, 1440, 900, false);
+      await clearCart(client, baseUrl);
+      const add = await addProduct(client, baseUrl, args.product);
+      const shippingCart = await setShippingCartQuantity(
+        client,
+        args.shippingQuantity,
+      );
+      const shippingRates = await testShippingRates(client);
+      const passed =
+        add.added &&
+        shippingCart.passed &&
+        shippingRates.every((destination) => destination.passed);
+      const report = {
+        schemaVersion: 1,
+        generatedAt: new Date().toISOString(),
+        mode: "temporary_browser_cart_shipping_rate_audit",
+        writesPerformed: false,
+        orderPlaced: false,
+        baseUrl,
+        product: args.product,
+        quantity: args.shippingQuantity,
+        summary: {
+          destinations: shippingRates.length,
+          passed: shippingRates.filter((entry) => entry.passed).length,
+          failed: shippingRates.filter((entry) => !entry.passed).length,
+          auditPassed: passed,
+        },
+        add,
+        shippingCart,
+        rates: shippingRates,
+      };
+      await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+      console.log(JSON.stringify(report.summary, null, 2));
+      console.log(`Report: ${reportPath}`);
+      if (!passed) process.exitCode = 1;
+      return;
+    }
+
     const desktop = await runViewportJourney(client, baseUrl, args.product, {
       name: "desktop",
       width: 1440,
       height: 900,
       mobile: false,
     });
+    const shippingCart = await setShippingCartQuantity(
+      client,
+      args.shippingQuantity,
+    );
     const shippingRates = await testShippingRates(client);
     await capture(client, path.join(screenshotDir, "desktop-cart-page.png"));
     const checkoutHandoff = await testCheckoutHandoff(client);
@@ -1027,8 +1128,11 @@ async function run() {
       buildFlowResult(
         "desktop_shipping_rates",
         "Desktop shipping rates",
-        pass(shippingRates.every((destination) => destination.passed)),
-        { destinations: shippingRates },
+        pass(
+          shippingCart.passed &&
+            shippingRates.every((destination) => destination.passed),
+        ),
+        { shippingCart, destinations: shippingRates },
       ),
       buildFlowResult(
         "desktop_checkout_handoff",

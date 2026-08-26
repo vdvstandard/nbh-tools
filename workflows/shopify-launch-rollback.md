@@ -21,7 +21,8 @@ of theme-writes buiten deze coordinatie uit.
 
 ## Bevestigde herstelpunten
 
-Laatst gecontroleerd op 2026-08-05 met `shopify theme list`:
+Laatst gecontroleerd op 2026-08-11 met `shopify theme list`, een live-theme pull
+en de Phase 9 preflight:
 
 - Store: `neighbourhood-arnhem.myshopify.com`
 - Huidige live theme: `Codex lookbook updates 2026-06-30`
@@ -30,8 +31,15 @@ Laatst gecontroleerd op 2026-08-05 met `shopify theme list`:
 - Theme repository: `C:\Users\david\Documents\neighbourhood-theme`
 - Branch: `codex-lookbook-viewer-updates`
 - Phase 0 baseline commit: `c55cb3c`
-- Laatste gecommitteerde theme-HEAD bij deze controle: `fb033b5`
-- Catalogusbaseline: `.tmp/shopify-baseline-phase0-complete-20260725`
+- Laatste gecommitteerde theme-HEAD bij deze controle: `4b3e6ff`
+- Actuele pre-launch catalogusbaseline:
+  `.tmp/phase9-shopify-baseline-20260811`
+
+Het live hersteltheme wijkt inhoudelijk af van de repository: de Phase 9 pull
+heeft 70 genormaliseerde contentverschillen en live Theme Check meldt 29 errors
+en 23 warnings, terwijl repository-HEAD `4b3e6ff` nul offenses meldt. Gebruik
+theme `186898579784` als bekend storefront-herstelpunt, maar niet als bron voor
+de nieuwe launch-theme zonder de diff eerst expliciet te reconciliëren.
 
 Het oude live theme moet na de launch in de Shopify theme library blijven
 staan. Verwijder of overschrijf theme `186898579784` niet zolang dit het
@@ -85,7 +93,12 @@ shopify.cmd theme publish `
    heeft. Stop wanneer ID `186898579784` niet beschikbaar is; publiceer nooit
    op basis van alleen een gelijkende naam.
 4. Test homepage, een product, add-to-cart, quantity, remove, pickup en een
-   shippingadres. Bevestig minimaal Nederland en Duitsland via checkout.
+   shippingadres. Bevestig minimaal Nederland en Duitsland via checkout met
+   zowel een normale cart als een cart boven EUR 300. De Phase 9 preflight vond
+   alleen in die duurdere test een ontbrekend NL/DE-tarief; dit is op
+   2026-08-26 verholpen in de `Algemeen profiel` delivery profile en herbevestigd
+   met een live read-only cart-audit (zie plan Phase 9). Deze stap blijft
+   staan om de fix te bevestigen tijdens een echte checkout-poging.
 5. Bewaar het defecte launch-theme als unpublished incidentbewijs. Verwijder
    het niet voordat de oorzaak is vastgesteld.
 

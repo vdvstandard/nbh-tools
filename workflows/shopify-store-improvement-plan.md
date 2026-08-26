@@ -161,6 +161,15 @@ Latest read-only evidence:
 
 Latest applied and verified evidence:
 
+- On 11 August 2026, 18 reviewed English product descriptions were applied:
+  14 blank descriptions, three short placeholder descriptions and one incorrect
+  Malin+Goetz description. Conflict checks passed for all 18 products, the
+  Admin API read-back found zero content mismatches and the public product feed
+  subsequently reported zero blank or short descriptions across 294 public
+  products. The original descriptions remain available in
+  `.tmp/product-description-apply-20260811/preflight-and-rollback.json`.
+- `.tmp/product-description-apply-20260811/apply-results.json`
+- `.tmp/product-description-post-apply-20260811.json`
 - `.tmp/phase2-variant-identity-apply-results-20260725.json`
 - `.tmp/phase2-fresh-product-import-apply-results-20260725.json`
 - `.tmp/phase2-fresh-variant-sync-apply-results-20260725.json`
@@ -409,6 +418,10 @@ Phase 6 evidence, 2026-07-29:
 
 Phase 7 progress and evidence, 2026-08-05:
 
+- Merchant confirmation received on 2026-08-11 that Shopify approved
+  iDEAL | Wero for the store. Eligibility is no longer an open gate; activation
+  and a successful payment still need to be confirmed during the live test-order
+  pass.
 - Added the read-only Admin API audit `tools/audit-operational-qa.py`. Its
   current report, `.tmp/phase7-operational-qa-20260805.json`, contains nine
   checks: three pass, two warn, four manual and zero blocked. Delivery-profile
@@ -418,12 +431,13 @@ Phase 7 progress and evidence, 2026-08-05:
   is not marked taxable. The `Neighbourhood Store` location is active,
   fulfills online orders and exposes local pickup with a four-hour preparation
   time.
-- Shipping is a launch blocker. All four REST-visible zones (`Domestic`,
-  `Buurlanden`, `Europe` and `International`) currently expose no rates. The
-  storefront Cart API independently returned zero rates for NL `6811 EV` and
-  DE `10115`; US `10001` returned one `Standard Worldwide` rate of EUR 40.00.
-  Configure deliberate paid and free-shipping rates in Shopify Admin, then
-  rerun the same three addresses before test orders.
+- Shipping remains a launch blocker, but the Phase 9 live-store retest refined
+  the cause. A stocked `beanie-onyx` cart returned NL `EUR 9.50`, DE `EUR
+  15.00` and US `EUR 40.00` rates and passed all 14 cart flows. An online
+  `105-standard-one-wash` cart at `EUR 309.50` still returned no NL or DE rate
+  while US returned `EUR 40.00`. Review shipping-profile assignment and price
+  thresholds, then rerun both a normal and a cart-over-EUR-300 case before test
+  orders. Delivery-profile reads remain unavailable to the audit token.
 - The main Shopify shop address contains `Rijnstraat 14-B` and `6811 EV`, but
   its city and phone fields are blank. The fulfillment/pickup location does
   contain Arnhem, and all public contact policies contain the complete address,
@@ -465,8 +479,9 @@ Phase 7 progress and evidence, 2026-08-05:
 
 Open Phase 7 launch gates, in order:
 
-1. Configure and verify shipping rates for NL, DE and US; then complete the
-   shipping and pickup test orders.
+1. Shipping rates for NL, DE and US are configured and verified as of
+   2026-08-26 (see Phase 9 shipping-rate fix). Complete the shipping and
+   pickup test orders.
 2. Complete the primary Shopify shop city and phone fields.
 3. Find a restrained place for public contact details and store hours that
    preserves the original Brick Store composition.
@@ -490,29 +505,488 @@ paths.
 
 - [ ] Export URLs from the current/previous storefront, sitemap, menus,
   analytics and search data.
-- [ ] Inventory every removed or changed product, collection and page handle.
+- [x] Inventory every removed or changed product, collection and page handle.
 - [ ] Map each old URL to the closest canonical replacement; avoid redirecting
   unrelated brand pages to the homepage.
 - [ ] Add a redirect from typo path `/collections/stelff` to
   `/collections/steiff` if the typo URL has ever been shared or indexed.
 - [ ] Decide mappings for removed old brand collections based on actual old
   traffic and replacement stock.
-- [ ] Preserve and verify the existing `/pages/contact` to `/pages/brickstore`
+- [x] Preserve and verify the existing `/pages/contact` to `/pages/brickstore`
   redirect.
 - [ ] Import redirects in one reviewed batch.
 - [ ] Crawl all old URLs and verify one-hop `301` responses without chains or
   loops.
 - [ ] Re-run the redirect crawl immediately before launch.
 
+Phase 8 preparation progress, 2026-08-05:
+
+- This phase is preparation-only until an explicit later approval. No redirect
+  was created, imported, changed or deleted in Shopify. No theme or storefront
+  write is part of the preparation tool.
+- Exported a fresh read-only Shopify baseline to
+  `.tmp/phase8-shopify-baseline-20260805`: 1,062 products, 61 collections, four
+  pages and one existing redirect.
+- Added `tools/prepare-shopify-redirects.py`. It intentionally has no
+  `--apply` option and writes only local review files. The current report is
+  `.tmp/phase8-redirect-preparation-20260805/redirect-preparation.json`; its
+  companion spreadsheet-friendly review file is `redirect-review.csv`.
+  `redirect-ready-for-review.csv` contains only the 368 strongest candidates
+  and is deliberately not shaped as a Shopify import file.
+- Added `tools/crawl-existing-storefront.py` and generated
+  `.tmp/phase8-existing-site-crawl-20260805/existing-site-crawl.json` plus CSV
+  inventories. The crawler is limited to internal `GET` requests, respects
+  `robots.txt`, has no apply mode and blocks account, checkout, cart mutation,
+  cookie-action and asset URLs. It found 1,321 unique URLs and safely fetched
+  772 content URLs: 766 returned `200`, six returned `404` and none errored.
+  Another 547 action URLs were guarded and two robots-disallowed URLs were not
+  fetched. Validation confirmed zero guarded or robots-disallowed requests.
+- The old Lightspeed sitemap contains 541 entries but only 539 unique paths;
+  two blog URLs are duplicated. The crawl discovered 782 URLs outside the
+  sitemap. Of those, 233 are fetched content URLs relevant to migration review
+  and 549 are protected or robots-disallowed. The tool also reads 20 internal
+  links from the old homepage and 18 from the local Shopify preview.
+- The combined deduplicated plan now has 804 unique source paths: 368 are
+  high-confidence candidates ready for human review, 431 require a destination
+  decision, one typo candidate requires evidence and four action/root paths
+  need no redirect. The crawl contributed 232 new rows. There are zero duplicate
+  source paths, source conflicts or proposed chains. `ready for review` does
+  not mean approved for import.
+- The crawl found 61 non-canonical paths, all in pagination or equivalent
+  listing routes: 20 shop, 19 blog, 17 other listing and five brand paths. Their
+  canonical evidence is retained per review row. Six internally linked old
+  URLs currently return `404`: an empty blog-tag route, a Cloudflare email
+  endpoint, two product links, `/service/stores/` and `/ukiyo-kids/`. The
+  Cloudflare endpoint needs no redirect; the other routes remain explicit
+  mappings or decisions. Product metadata fetching now records HTTP `404`
+  responses instead of aborting the preparation run.
+- Of 337 old product URLs, 282 exactly match a public Shopify product handle.
+  Fifty exact targets are draft or unpublished and five old product slugs have
+  no exact Shopify handle, so those 55 remain decisions. The five unmatched
+  pages were read individually: four are in-stock Messyweekend sunglasses and
+  one is an in-stock `encens d'auroville` product. Both vendors are explicitly
+  retired by the catalog policy, so these URLs require a retirement decision
+  rather than an unrelated replacement redirect.
+- Comparing the Phase 0 and current Shopify baselines found zero handle changes
+  for surviving resource IDs, 21 removed resources, 21 added resources and one
+  collection recreated at the same handle. The recreated
+  `/collections/atelier-neighbourhood` path needs no redirect.
+- The old public `/collections/stelff` collection is present in the Phase 0
+  baseline and `/collections/steiff` exists now. A web-index search returned no
+  Neighbourhood result for the typo, so the row remains `needs_evidence` until
+  request logs, analytics or another sharing record confirms it was used.
+- Thirteen old brand paths need decisions. Current replacement-stock evidence
+  is included per vendor. `King & Tuckfield` and `Malin & Goetz` have public
+  products and plausible normalized collection targets; inactive, unpublished
+  or absent brands are not redirected to the homepage by default.
+- The sitemap has 98 blog entries representing 96 unique paths: 95 articles and
+  the blog index. Another 177 crawl-only blog pagination and tag paths are under
+  `/blogs/arnhem/`. They remain unmapped because Shopify blog articles are not
+  in the current baseline export and a migration versus retirement decision has
+  not been made.
+- Added `tools/prepare-blog-review.py` and generated the preparation-only review
+  inventory in `.tmp/phase8-blog-review-20260805`. It confirms 95 unique live
+  article URLs and 95 unique canonicals; every article returns `200` and has a
+  title, publication date and short summary. The review CSV and Markdown files
+  have blank decision and notes fields. The articles comprise three from 2025,
+  25 from 2024 and 67 from 2023. No article was created, changed, published or
+  removed during this inventory.
+- Read the completed `blog bestand.xlsx` with
+  `tools/read-blog-review-decisions.py` and stored a hashed, local decision
+  report in `.tmp/phase8-blog-decisions-20260805`. All 95 IDs, paths and URLs
+  match the source inventory with no duplicates, missing rows or unknown
+  decision values. The completed sheet selected 79 articles to keep, 13 to
+  remove and three as unsure. A later explicit local override retains all three
+  unsure articles, bringing the final preparation decision to 82 keep and 13
+  remove. No blog or Shopify resource was changed.
+- Added `tools/audit-shopify-blogs.py` and confirmed via a read-only Admin API
+  audit that Shopify already has one blog: title `Blogs`, handle `news`, with
+  two published test articles. Both test articles have a featured image. The
+  audit tool now prefers current client credentials because the stored Admin
+  token returned `401`; this matches the existing baseline export behavior.
+- Added `tools/prepare-shopify-blog-migration.py` and generated a draft-only,
+  no-apply preflight in `.tmp/phase8-shopify-blog-migration-20260805`. It
+  prepares all 82 retained articles with clean body HTML, original handles,
+  date-only publication metadata and featured-image inputs. All 82 unique hero
+  images are reachable. Three retained articles contain ten additional inline
+  images; all ten are reachable but must be moved to Shopify Files and their
+  body URLs rewritten before final publication.
+- The initial URL-preserving recommendation was handle `arnhem`. The user first
+  selected `blogs` and then finalized the blog as title `Journal`, handle
+  `journal`. The migration target is therefore
+  `/blogs/journal/<legacy-handle>`, and retained legacy article paths will
+  require redirects.
+- The migration preflight rewrote 46 high-confidence internal links. Eighteen
+  occurrences across 14 unique old links remain unresolved because they point
+  to removed brands, unpublished Shopify resources, a removed blog article or
+  old `404` pages. They are intentionally not redirected or rewritten yet.
+- The current theme is already compatible with the prepared content: the blog
+  grid renders `article.image`, title and summary, while the article template
+  renders a responsive featured image, title, publication date and body. The
+  migration manifest contains draft inputs with `isPublished: false`; it has no
+  execution or apply mode.
+- On 5 August 2026, after explicit approval, the guarded
+  `tools/apply-shopify-blog-draft-test.py` run changed the existing blog handle
+  from `news` to `blogs`. Shopify's `redirectNewHandle` and `redirectArticles`
+  options were enabled. The same run created legacy review item 47, `Instagram`,
+  as draft article `gid://shopify/Article/615211368776`; post-write verification
+  confirms `isPublished: false` and no publication date.
+- A subsequent explicitly approved `tools/update-shopify-blog-settings.py` run
+  changed title `Blogs` / handle `blogs` to title `Journal` / handle `journal`.
+  The draft remains attached to the same blog and remains unpublished.
+- The `Instagram` featured image was copied successfully to Shopify CDN with
+  alt text. Its one inline body image renders from the original Lightspeed CDN.
+  The current app token has `write_content` but not `write_files`, so moving
+  inline images into Shopify Files remains a separate pre-publication step. A
+  fresh read-only audit reports one blog, three articles, two published articles,
+  one draft and featured images on all three articles. Shopify created six
+  automatic redirects across the two handle changes: three `news` to `blogs`
+  and three `blogs` to `journal`. These currently form redirect chains and must
+  be flattened to direct `news` to `journal` routes before launch. The refreshed
+  bulk manifest targets `/blogs/journal`, excludes the existing `instagram`
+  draft and contains 81 remaining draft inputs, all with `isPublished: false`.
+- The existing `/pages/contact` to `/pages/brickstore` redirect remains
+  preserved alongside the six automatic blog-handle redirects.
+- Source gaps are explicit: no analytics landing-page export and no Search
+  Console URL export are available in the workspace. The first Phase 8 item
+  stays open until those are supplied or explicitly waived.
+
+Phase 8 preparation refresh, 2026-08-11:
+
+- The merchant reconfirmed that Phase 8 remains preparation-only because the
+  migration is not happening yet. No redirect was imported, no blog was
+  created or published and no Shopify content was changed during this refresh.
+- Re-crawled the existing storefront with four read-only workers. The fresh
+  crawl found 1,310 URLs and zero errors. Merging it with the 5 August crawl
+  preserves 13 historical-only URLs, including five product pages and one
+  collection pagination route that disappeared from the latest crawl.
+- Exported a fresh read-only Shopify baseline with 1,062 products, 61
+  collections, four pages and seven existing redirects. Product and collection
+  counts are unchanged; the six additional redirects are the automatic blog
+  handle redirects already documented above.
+- Rebuilt the redirect preparation from the merged crawl history and fresh
+  baseline. The master inventory has 805 unique paths: 367 direct candidates
+  for later review, 83 conditional Journal mappings, 350 open decisions and
+  five routes where no manual redirect is recommended. All review CSV files
+  contain `import_ready=false` and blank approval fields; no Shopify-shaped
+  import file was produced.
+- Re-read all 95 legacy articles with four workers and repaired the body-text
+  encoding before regenerating decisions. Validation reports 82 retained and
+  13 removed articles, zero fetch errors, zero missing dates or hero images and
+  zero mojibake occurrences.
+- Rebuilt the Journal draft manifest with four workers. It contains 81 pending
+  unpublished draft inputs because the retained `instagram` test draft already
+  exists. All 82 hero images and all ten inline images are reachable. Eighteen
+  internal-link occurrences across 14 unique URLs remain explicit decisions.
+- Added `tools/merge-storefront-crawl-history.py` and
+  `tools/prepare-phase8-review-pack.py`. Final local validation reports zero
+  duplicate source paths, zero base conflicts, zero proposed redirect chains,
+  zero loops and three existing automatic blog chains that must be flattened
+  only during the later migration.
+- Review pack: `.tmp/phase8-master-review-20260811/`.
+
+Phase 8 retained-blog draft upload, 2026-08-11:
+
+- After a separate explicit approval, uploaded the 81 pending retained articles
+  to the existing `Journal` blog as unpublished drafts. The guarded tool has no
+  publication or redirect mutation, forces `isPublished=false` and writes a
+  local creation register after every successful article.
+- Post-write verification matched all 81 new drafts on handle, title, body
+  text, summary, inline-image references, Journal ownership and unpublished
+  status. All 81 featured images were copied to Shopify CDN and there were zero
+  verification failures.
+- The retained migration set is now complete in Shopify: 82 of 82 retained
+  handles are present, all 82 are drafts, none is published and all 82 have a
+  featured image. This includes the earlier `instagram` draft.
+- Journal now contains 84 articles total. The two pre-existing published test
+  articles `inkoop-uitkoop-duurkoop` and `dit-is-een-test` are not part of the
+  retained migration set and were left unchanged.
+- No redirect was created, imported, changed or deleted. No retained article
+  was published. The ten inline images across three retained drafts still use
+  the old Lightspeed CDN and must be moved to Shopify Files before publication;
+  18 link occurrences across 14 unique old URLs also remain pre-publication
+  decisions.
+- Added `tools/apply-shopify-blog-drafts.py`.
+- Apply evidence:
+  `.tmp/phase8-shopify-blog-draft-upload-20260811/apply-results.json`.
+- Independent post-upload audit:
+  `.tmp/phase8-shopify-blog-audit-post-draft-upload-20260811/shopify-blog-audit.json`.
+- The regenerated post-upload migration manifest contains zero pending draft
+  inputs. A final idempotent dry-run recognizes all 81 bulk-uploaded handles as
+  matching existing drafts with zero conflicts and zero creates required.
+- Current review pack:
+  `.tmp/phase8-master-review-post-draft-upload-20260811/`.
+
+Phase 8 retained-blog publication, 2026-08-11:
+
+- After explicit publication approval, a guarded live preflight matched exactly
+  82 retained Journal drafts and the two confirmed test handles, with zero
+  conflicts. A full pre-mutation rollback snapshot was stored locally.
+- Published all 82 retained articles while preserving each legacy source
+  publication date. Post-write comparison found zero missing or unexpected
+  handles, zero drafts, zero title mismatches and zero source-date mismatches.
+- Only after all 82 retained articles passed publication verification, deleted
+  the two confirmed tests `dit-is-een-test` and
+  `inkoop-uitkoop-duurkoop`.
+- An independent Admin API audit now reports one blog, 82 articles, 82
+  published articles and featured images on all 82. All 82 Shopify CDN
+  featured-image URLs are publicly reachable.
+- Public checks returned `200` for the Journal index and sampled oldest,
+  existing and newest retained articles. Both deleted test URLs return `404`.
+- No redirect was created, imported, changed or deleted. The six automatic
+  blog-handle redirects remain unchanged for later migration work.
+- The ten inline body images across three retained articles still use the old
+  Lightspeed CDN and remain reachable. The 18 unresolved internal-link
+  occurrences across 14 unique old URLs also remain explicit follow-up work;
+  the merchant approved publication with these known items still open.
+- Added `tools/publish-shopify-retained-blogs.py`.
+- Preflight and rollback evidence:
+  `.tmp/phase8-shopify-blog-publication-20260811/preflight-and-rollback.json`.
+- Mutation register and apply evidence:
+  `.tmp/phase8-shopify-blog-publication-20260811/mutation-register.json` and
+  `.tmp/phase8-shopify-blog-publication-20260811/apply-results.json`.
+- Independent post-publication audit:
+  `.tmp/phase8-shopify-blog-audit-post-publication-20260811/shopify-blog-audit.json`.
+
+Phase 8 retained-blog internal-link update, 2026-08-11:
+
+- Audited the rendered HTML of all 82 Journal articles after publication. The
+  previously reported 18 unresolved article/link pairs represented 21 actual
+  anchor occurrences across 14 unique legacy URLs and 16 articles; repeated
+  links inside the same article account for the difference.
+- Rewrote nine anchors to four verified public Shopify targets: the canonical
+  `King & Tuckfield` and `Malin & Goetz` collections and the relevant Filson
+  and Welter Shelter Journal articles.
+- Removed twelve anchors that had no public Shopify equivalent while
+  preserving their complete visible text and nested formatting. This avoids
+  sending readers to removed brands, draft products, a retired article or old
+  `404` routes.
+- Independent Admin API comparison found exactly 16 changed article bodies and
+  66 unchanged bodies. All titles, handles, source publication timestamps,
+  publication states and featured images remained unchanged. No old
+  `nbharnhem.com` href remains in any Admin article body.
+- The final article bodies contain 55 internal link occurrences across 24
+  unique Shopify targets. All 24 targets return `200`. The four newly used
+  targets occur exactly as planned: one King & Tuckfield collection link,
+  three Malin & Goetz collection links, four Filson Journal links and one
+  Welter Shelter Journal link.
+- Journal content is English-only. Shopify contains zero article translations,
+  and no localized Journal copy needs to be created or maintained. Any
+  locale-prefixed storefront routes are inherited from the store-wide language
+  configuration rather than separate article content.
+- Shopify's distributed article `page_cache` served mixed old and new Filson
+  snapshots after the Admin update. Guarded two-write cache refreshes through
+  both GraphQL and REST restored the exact final body byte-for-byte, but did
+  not purge every pre-existing anonymous page-cache node. A final 20-request
+  sample still received 14 stale snapshots. Admin, translation audits and
+  uncached `view` renders are clean. No riskier handle or publication toggle
+  was attempted; public cache expiry must be rechecked before domain migration.
+- Redirects were not mutated and the six automatic blog-handle redirects are
+  byte-for-byte unchanged.
+- Added `tools/update-shopify-blog-internal-links.py` and
+  `tools/audit-shopify-blog-translations.py`.
+- Link-update evidence:
+  `.tmp/phase8-shopify-blog-link-update-20260811/preflight-and-rollback.json`,
+  `.tmp/phase8-shopify-blog-link-update-20260811/mutation-register.json` and
+  `.tmp/phase8-shopify-blog-link-update-20260811/apply-results.json`.
+- Cache-refresh evidence:
+  `.tmp/phase8-shopify-blog-link-cache-refresh-20260811/` and
+  `.tmp/phase8-shopify-blog-link-rest-cache-refresh-20260811/`.
+- Independent post-link audit:
+  `.tmp/phase8-shopify-blog-audit-post-link-update-20260811/shopify-blog-audit.json`.
+- Final Admin audit after both cache-refresh attempts:
+  `.tmp/phase8-shopify-blog-audit-final-link-state-20260811/shopify-blog-audit.json`.
+- Translation audit:
+  `.tmp/phase8-shopify-blog-translation-audit-20260811/shopify-blog-translation-audit.json`.
+
 ## Phase 9: Pre-launch and launch
 
 - [ ] Freeze catalog handles and navigation.
-- [ ] Export a final Shopify baseline.
-- [ ] Run Theme Check, storefront crawl, visual QA and checkout tests.
+- [x] Export a current pre-launch Shopify baseline; repeat immediately before
+  cutover.
+- [x] Run Theme Check, storefront crawl, visual QA and checkout tests in
+  no-order mode.
+- [x] Reconcile and validate the approved local theme in a development preview;
+  keep it unpublished until the migration window.
 - [ ] Confirm no published empty collections or public draft-only journeys.
-- [ ] Confirm robots, sitemap, domain, SSL and search-engine settings.
+  The draft journey check passes; 19 empty public collections remain.
+- [ ] Confirm robots, sitemap, domain, SSL and search-engine settings. Current
+  robots/TLS/public-access checks pass; custom-domain cutover and post-cutover
+  canonical/SSL verification remain open.
 - [ ] Publish the approved theme version.
 - [ ] Monitor orders, errors, 404s, sync drift and performance after launch.
+
+Phase 9 read-only preflight evidence, 2026-08-11:
+
+- No theme publish/push, domain or DNS change, redirect import, catalog
+  publication, payment or order write was performed. The consolidated report is
+  `.tmp/phase9-prelaunch-20260811/phase9-preflight.md`, with structured evidence
+  in `.tmp/phase9-prelaunch-20260811/phase9-preflight.json`.
+- Exported a fresh Shopify baseline to
+  `.tmp/phase9-shopify-baseline-20260811`: 1,062 products (`294` active, `768`
+  draft), 61 Admin collections, seven existing redirects and four pages. All
+  294 active products have body copy and images and are published.
+- The 294 active product handles match the 294 public product routes exactly.
+  No draft handle is public and no active handle is missing from the storefront.
+- Pulled the actual live theme `186898579784` to
+  `.tmp/phase9-live-theme-20260811`. Compared with
+  `C:\Users\david\Documents\neighbourhood-theme`, both sides contain 326 theme
+  files, but there are 70 normalized content differences, two repository-only
+  files and two live-only files. The comparison is saved as
+  `.tmp/phase9-theme-divergence-20260811.json`.
+- Theme Check on the live pull reports 29 errors and 23 warnings: one dynamic
+  tag syntax error in `sections/header.liquid`, one invalid schema placement in
+  `sections/email-signup-banner.liquid`, and 27 missing locale translations.
+  The local theme repository returns `[]` with zero offenses, so the approved
+  source must be reconciled with the live theme before publication.
+- Improved `tools/crawl-existing-storefront.py` to follow Shopify sitemap
+  indexes, select the root locale, retry throttled requests, use reusable HTTP
+  sessions and guard query-dependent vendor and consent-action routes. The
+  four-worker English storefront crawl processed 449/449 URLs from 438 sitemap
+  entries with zero network errors and no crawl limit.
+- The crawl's two raw 404 paths are functional-route artifacts, not broken
+  content: `/collections/vendors` requires its recorded `?q=` parameter and
+  `/policies/#shopifyReshowConsentBanner` is intercepted by Shopify's consent
+  UI. Full vendor URLs return successfully and the consent UI reopens in the
+  browser audit.
+- Added `tools/audit-public-shopify-collections.py`. It found 19 published empty
+  collections, all present in the sitemap and internally referenced: `boots`,
+  `denim`, `frontpage`, `hoodies`, `in-store-only`, `jackets`, `loafers`,
+  `outerwear`, `overshirts`, `pants`, `polos`, `sandals`, `scarves`, `shirts`,
+  `shoes`, `shorts`, `sweats`, `t-shirts` and `vests`. Populate, replace or
+  unpublish them before launch.
+- Core browser flows pass 7/7 on desktop and mobile. A stocked online product
+  passes 14/14 cart, quantity, removal, shipping-rate and checkout-handoff
+  checks without placing an order. Cart copy still does not explain delivery
+  versus Arnhem pickup before checkout.
+- Captured 26 desktop/mobile screenshots across home, collections, regular and
+  in-store-exclusive products, search, contact, Journal, an imported article,
+  Lookbook and cart. Home, contact and Journal imagery render correctly. The
+  initial consent banner and preferences both fit at 390 px in the DOM audit.
+- The performance/accessibility run covers seven templates in 14 viewport runs.
+  Core pages pass; Lookbook fails desktop and mobile because 88 focusable
+  elements remain inside `aria-hidden` content. Lookbook transferred about 6.8
+  MB desktop and 3.6 MB mobile in this run and remains the heaviest template.
+- The current Shopify URL is public and not password protected. `robots.txt`
+  returns 200, does not globally disallow the storefront and points to the
+  Shopify sitemap. Current TLS certificates validate. The sitemap index exposes
+  root English content plus `de`, `es` and `fr` locale sitemaps; these global
+  locale settings were intentionally left untouched.
+- `nbharnhem.com` still serves the Lightspeed storefront and all checked Shopify
+  canonicals use `neighbourhood-arnhem.myshopify.com`. Custom-domain/DNS
+  cutover, redirect import, canonical refresh and Shopify SSL revalidation are
+  launch-window tasks only.
+- The primary Shopify shop profile still lacks city and phone. Public contact,
+  legal-notice and policy pages contain the complete business details, but the
+  Admin shop identity should be completed before launch.
+- Journal remains healthy: one `journal` blog, 82 published articles and 82
+  featured images. The root-locale crawl found the Journal index plus all 82
+  articles.
+- iDEAL | Wero approval is merchant-confirmed, but activation and real payment,
+  notification, pickup, shipping, discount, refund and cancellation tests remain
+  manual launch gates requiring explicit approval.
+- Added `tools/audit-shopify-domain-seo.py` and
+  `tools/build-shopify-phase9-preflight-report.py` so the same domain/SEO and
+  consolidated checks can be repeated immediately before cutover.
+
+Phase 9 theme reconciliation update, 2026-08-23:
+
+- No live theme, domain, redirect, catalog or order write was performed. The
+  current theme `186898579784` was pulled again and is byte-for-byte unchanged
+  from the 2026-08-11 pull.
+- Added `tools/compare-shopify-themes.py` and generated the read-only comparison
+  in `.tmp/phase9-theme-reconciliation-20260823/`. It excludes non-theme files
+  and distinguishes semantic JSON equality from deployable code differences.
+- The local repository contains 325 theme files and the live pull 326. One file
+  exists only locally (`assets/collection-title.js`), two obsolete snippets
+  exist only in the live pull, 15 template JSON files differ only in Shopify's
+  generated formatting and 55 files contain material changes.
+- Git history confirms that the local repository is the approved source: its
+  material changes contain the intended AKOG visibility, Theme Check, cart,
+  performance and accessibility fixes. The stray zero-byte `assets/Infi` file
+  was removed locally.
+- Fresh Theme Check results are zero errors and zero warnings for the approved
+  repository. The unchanged live pull still reports 29 errors and 23 warnings;
+  this is expected because the approved repository has deliberately not been
+  published.
+- A non-published development theme (`188639904072`) passed all seven desktop
+  and mobile browser flows. The 14-run performance/accessibility audit has no
+  error-level findings; the previous Lookbook hidden-focus failure is resolved.
+  Its 20 remaining findings are optimization warnings for script count and
+  initial-viewport lazy-loaded images.
+- The refreshed report is
+  `.tmp/phase9-prelaunch-20260823/phase9-preflight.md`. Theme reconciliation and
+  Lookbook accessibility moved to passed. Three blockers remain: 19 public
+  empty collections, missing NL/DE rates for the EUR 309.50 shipping edge case,
+  and missing city/phone in the primary Shopify shop identity.
+- Publishing the reconciled theme remains an explicit launch-window gate.
+
+Phase 9 shipping-rate fix, 2026-08-26:
+
+- Diagnosed the missing NL/DE shipping-rate edge case with a temporary
+  read-only browser audit against the live store, adding a `melton-bomber-navy`
+  cart (EUR 1,299.50) and requesting rates for NL, DE and US. Before the fix,
+  NL and DE both returned `shipping_rates: []`; carts at EUR 210, 350, 560 and
+  619 were also checked to confirm lower amounts were unaffected.
+- Root cause: the `Algemeen profiel` delivery profile's `Buurlanden` zone
+  (BE/FR/DE/LU) had a `TOTAL_CART_VALUE` rate condition with an upper bound, so
+  carts above that bound matched no rate tier.
+- Applied a `deliveryProfileUpdate` GraphQL mutation to give the zone's
+  standard rate an unbounded `TOTAL_CART_VALUE` condition (min EUR 0, no max)
+  at EUR 15. Zero `userErrors`. No product, catalog or theme write was
+  performed.
+- Re-ran the same live browser audit after the fix:
+  `tools/audit-cart-checkout.mjs --base-url
+  https://neighbourhood-arnhem.myshopify.com --product melton-bomber-navy
+  --shipping-only`. All three destinations now pass. NL and DE return EUR 0.00
+  because the store's existing free-shipping-over-EUR-200 rule applies at this
+  cart value; US returns the standard worldwide rate. `writesPerformed: false`
+  and `orderPlaced: false`.
+- Evidence: `.tmp/shipping-live-210-20260826.json` through
+  `.tmp/shipping-live-1299-50-20260826.json` (pre-fix),
+  `.tmp/delivery-rates-pre-fix-20260826.json`,
+  `.tmp/delivery-rates-new-api-pre-fix-20260826.json`,
+  `.tmp/fix-delivery-rate-tiers-new-api-result-20260826.json`,
+  `.tmp/delivery-rates-new-api-post-fix-20260826.json` and
+  `.tmp/shipping-live-post-fix-20260826.json`.
+- Shipping-rate configuration is now resolved. The shipping and pickup
+  **test orders** themselves (Open Phase 7 launch gate 1) are still
+  outstanding and remain a manual, merchant-approved step. Two Phase 9
+  blockers remain: 19 public empty collections and missing city/phone in the
+  primary Shopify shop identity.
+
+Phase 9 shop-identity decision, 2026-08-26:
+
+- David added the missing city to the primary Shopify shop profile
+  (Settings > General > Store details).
+- David explicitly decided not to add a phone number to that field. This is a
+  deliberate merchant choice, not an oversight, so it is no longer tracked as
+  an open blocker. One open question worth a manual check before launch: some
+  carriers require a sender phone number for customs paperwork on
+  international (e.g. US) shipments; confirm with the carrier/customs setup
+  whether that specific field, rather than the public Admin shop phone, is
+  what is actually required.
+
+Phase 9 empty-collection unpublish, 2026-08-26:
+
+- Confirmed with David that the 19 empty published collections belong to a
+  retired category taxonomy: the storefront now organizes by brand instead.
+  Old category copy exists from `nbharnhem.com` and can be reused later if
+  these categories become active again, but populating them is not a launch
+  requirement.
+- Re-verified all 19 handles as still empty on the live storefront
+  immediately before writing (0 public products each), then unpublished them
+  with the new guarded, allowlist-only `tools/unpublish-empty-category-collections.py`
+  (REST `custom_collections` `published: false`; the app token still lacks
+  `write_publications`, matching the Phase 3 precedent). The `frontpage`
+  handle was checked and is not referenced anywhere in the theme repository,
+  so it carries no homepage risk.
+- Independent post-write verification: all 19 `/collections/<handle>` pages
+  now return `404`. Zero writes were performed outside the fixed allowlist.
+- Evidence: `.tmp/unpublish-empty-category-collections.json`.
+- Zero Phase 9 blockers remain in this refresh. Publishing the reconciled
+  theme, the shipping/pickup test orders and the other Open Phase 7 launch
+  gates are still outstanding.
 
 ## Commands
 

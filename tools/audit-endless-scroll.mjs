@@ -170,6 +170,107 @@ async function readMetrics(client) {
   );
 }
 
+async function runReturnPositionFlow(client, collectionUrl) {
+  const selected = await evaluate(
+    client,
+    `(() => {
+      const items = [...document.querySelectorAll('[data-endless-scroll-grid] > .grid__item')];
+      const item = items.at(-1);
+      const link = item
+        ? [...item.querySelectorAll('a[href]')].find((candidate) =>
+            new URL(candidate.href, location.origin).pathname.includes('/products/')
+          )
+        : null;
+      if (!item || !link) return null;
+      item.scrollIntoView({ block: 'center' });
+      return {
+        cardsBeforeNavigation: items.length,
+        productPath: new URL(link.href, location.origin).pathname,
+        productUrl: link.href
+      };
+    })()`,
+  );
+
+  if (!selected) {
+    return { passed: false, error: "No product card was available for the return-position flow." };
+  }
+
+  await sleep(250);
+  const viewportOffset = await evaluate(
+    client,
+    `(() => {
+      const productPath = ${JSON.stringify(selected.productPath)};
+      const item = [...document.querySelectorAll('[data-endless-scroll-grid] > .grid__item')].find(
+        (candidate) => [...candidate.querySelectorAll('a[href]')].some(
+          (link) => new URL(link.href, location.origin).pathname === productPath
+        )
+      );
+      return item?.getBoundingClientRect().top ?? null;
+    })()`,
+  );
+
+  await evaluate(
+    client,
+    `(() => {
+      const productPath = ${JSON.stringify(selected.productPath)};
+      const link = [...document.querySelectorAll('[data-endless-scroll-grid] > .grid__item a[href]')].find(
+        (candidate) => new URL(candidate.href, location.origin).pathname === productPath
+      );
+      link?.click();
+    })()`,
+  );
+  await waitForDocument(client, selected.productUrl);
+  await evaluate(client, "history.back()");
+  await waitForDocument(client, collectionUrl);
+
+  let restored = null;
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    restored = await evaluate(
+      client,
+      `(() => {
+        const productPath = ${JSON.stringify(selected.productPath)};
+        const grid = document.querySelector('[data-endless-scroll-grid]');
+        const item = grid
+          ? [...grid.querySelectorAll(':scope > .grid__item')].find(
+              (candidate) => [...candidate.querySelectorAll('a[href]')].some(
+                (link) => new URL(link.href, location.origin).pathname === productPath
+              )
+            )
+          : null;
+        return {
+          cardsAfterReturn: grid?.querySelectorAll(':scope > .grid__item').length || 0,
+          productFound: Boolean(item),
+          viewportOffset: item?.getBoundingClientRect().top ?? null,
+          navigationType: performance.getEntriesByType('navigation')[0]?.type || ''
+        };
+      })()`,
+    );
+    if (
+      restored.productFound &&
+      Math.abs(restored.viewportOffset - viewportOffset) <= 2
+    ) {
+      break;
+    }
+    await sleep(250);
+  }
+
+  const offsetDifference =
+    restored?.viewportOffset === null || viewportOffset === null
+      ? null
+      : Math.abs(restored.viewportOffset - viewportOffset);
+
+  return {
+    passed:
+      Boolean(restored?.productFound) &&
+      offsetDifference !== null &&
+      offsetDifference <= 2,
+    ...selected,
+    expectedViewportOffset: viewportOffset,
+    offsetDifference,
+    ...restored,
+  };
+}
+
 async function run() {
   const args = parseArgs(process.argv.slice(2));
   const reportPath = path.resolve(args.report);
@@ -270,6 +371,7 @@ async function run() {
     );
     await sleep(500);
     const final = await readMetrics(client);
+    const returnPosition = await runReturnPositionFlow(client, args.url);
     const screenshot = await client.send("Page.captureScreenshot", {
       format: "png",
       fromSurface: true,
@@ -308,6 +410,15 @@ async function run() {
     if (final.visibleLoadMore) {
       issues.push({ code: "visible_load_more" });
     }
+    if (!returnPosition.passed) {
+      issues.push({
+        code: "product_return_position_mismatch",
+        expectedViewportOffset: returnPosition.expectedViewportOffset ?? null,
+        actualViewportOffset: returnPosition.viewportOffset ?? null,
+        offsetDifference: returnPosition.offsetDifference ?? null,
+        error: returnPosition.error || "",
+      });
+    }
 
     const report = {
       schemaVersion: 1,
@@ -317,6 +428,7 @@ async function run() {
       expectedProducts: args.expected,
       rounds,
       final,
+      returnPosition,
       issues,
       consoleMessages,
       networkResponses,
@@ -338,6 +450,8 @@ async function run() {
           nextUrl: final.nextUrl,
           controlHidden: final.controlHidden,
           visibleLoadMore: final.visibleLoadMore,
+          returnPositionPassed: returnPosition.passed,
+          returnPositionOffsetDifference: returnPosition.offsetDifference ?? null,
           issues: issues.length,
         },
         null,

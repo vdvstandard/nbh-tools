@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+import { once } from "node:events";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -51,6 +52,25 @@ function parseArgs(argv) {
 
 function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function stopChrome(chrome) {
+  if (!chrome || chrome.exitCode !== null) return;
+  chrome.kill();
+  await Promise.race([once(chrome, "exit"), sleep(5000)]);
+}
+
+async function removeChromeProfile(profilePath, attempts = 10) {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      await rm(profilePath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      const retryable = ["EBUSY", "ENOTEMPTY", "EPERM"].includes(error?.code);
+      if (!retryable || attempt === attempts) throw error;
+      await sleep(attempt * 250);
+    }
+  }
 }
 
 async function waitForTarget(port, url, attempts = 80) {
@@ -603,9 +623,9 @@ async function run() {
     console.log(`Report: ${reportPath}`);
   } finally {
     client?.close();
-    if (chrome && !chrome.killed) chrome.kill();
+    await stopChrome(chrome);
     if (!args.connectToExistingChrome) {
-      await rm(profilePath, { recursive: true, force: true });
+      await removeChromeProfile(profilePath);
     }
   }
 }

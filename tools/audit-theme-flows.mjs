@@ -355,11 +355,17 @@ async function runAccountFlow(client, baseUrl) {
       externalState,
     );
   }
-  await navigate(client, accountHref);
+  await client.send("Page.navigate", { url: accountHref });
+  await waitForCondition(
+    client,
+    `document.readyState === 'complete' && window.location.href !== 'about:blank'`,
+    "Customer account handoff did not finish loading",
+  );
   const state = await evaluate(
     client,
     `(() => ({
       url: location.href,
+      origin: location.origin,
       path: location.pathname,
       title: document.title,
       hasLoginForm: Boolean(
@@ -368,9 +374,13 @@ async function runAccountFlow(client, baseUrl) {
       hasAccountCopy: /login|account|sign in/i.test(document.body.textContent || ''),
     }))()`,
   );
-  const passed = state.path.includes("/account") && (
-    state.hasLoginForm || state.hasAccountCopy
+  const shopifyAccountHandoff =
+    state.origin === "https://shopify.com" &&
+    state.path.includes("/authentication/");
+  const passed = shopifyAccountHandoff || (
+    state.path.includes("/account") && (state.hasLoginForm || state.hasAccountCopy)
   );
+  state.externalAccountHandoff = shopifyAccountHandoff;
   return result("account_link", "Account", passed ? "pass" : "fail", state);
 }
 
