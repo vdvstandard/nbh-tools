@@ -21,29 +21,42 @@ of theme-writes buiten deze coordinatie uit.
 
 ## Bevestigde herstelpunten
 
-Laatst gecontroleerd op 2026-08-11 met `shopify theme list`, een live-theme pull
-en de Phase 9 preflight:
+Laatst gecontroleerd op 2026-08-26 met `shopify theme list`, direct na de
+Phase 9 theme-publicatie:
 
 - Store: `neighbourhood-arnhem.myshopify.com`
-- Huidige live theme: `Codex lookbook updates 2026-06-30`
-- Live theme ID: `186898579784`
-- Development theme ID: `187323318600`
+- Huidige live theme: `Launch candidate 8a95917 2026-08-26`
+- Live theme ID: `188754329928`
+- Development theme ID: `188639904072`
 - Theme repository: `C:\Users\david\Documents\neighbourhood-theme`
 - Branch: `codex-lookbook-viewer-updates`
 - Phase 0 baseline commit: `c55cb3c`
-- Laatste gecommitteerde theme-HEAD bij deze controle: `4b3e6ff`
+- Laatste gecommitteerde theme-HEAD bij deze controle: `9c4eaa9`
 - Actuele pre-launch catalogusbaseline:
-  `.tmp/phase9-shopify-baseline-20260811`
+  `.tmp/phase9-shopify-baseline-20260811` (verouderd — ververs voor de
+  volgende live wijziging)
 
-Het live hersteltheme wijkt inhoudelijk af van de repository: de Phase 9 pull
-heeft 70 genormaliseerde contentverschillen en live Theme Check meldt 29 errors
-en 23 warnings, terwijl repository-HEAD `4b3e6ff` nul offenses meldt. Gebruik
-theme `186898579784` als bekend storefront-herstelpunt, maar niet als bron voor
-de nieuwe launch-theme zonder de diff eerst expliciet te reconciliëren.
+Beschikbare hersel-/referentiethema's in de Shopify theme library, allemaal
+`[unpublished]`:
 
-Het oude live theme moet na de launch in de Shopify theme library blijven
-staan. Verwijder of overschrijf theme `186898579784` niet zolang dit het
-primaire herstelpunt is.
+- `188735193416` — `Rollback before navigation update 2026-08-25`: expliciet
+  gemaakte rollback-snapshot van vlak vóór de navigatiewijziging van
+  2026-08-25.
+- `186898579784` — `Codex lookbook updates 2026-06-30`: het vorige live
+  theme, vervangen door de publicatie van `188754329928` op 2026-08-26. Dit
+  theme wijkt inhoudelijk af van de huidige repository (bekend van de Phase 9
+  vergelijking op 2026-08-11/23) en is dus geen bron voor nieuwe wijzigingen,
+  maar wel een bekend werkend storefront-herstelpunt van vóór de launch.
+
+Er zijn dus twee kandidaat-hersteltheme's naast de huidige live theme. Welke
+van de twee de juiste rollback-keuze is hangt af van wat er misgaat: gebruik
+`188735193416` als het probleem in de navigatiewijziging van 2026-08-25 of
+later zit, en `186898579784` als je helemaal terug wilt naar de pre-launch
+situatie. Bevestig bij een echt incident eerst met de recovery owner welke van
+de twee van toepassing is voordat je publiceert.
+
+Verwijder of overschrijf geen van beide hersteltheme's zolang dit de
+bekende herstelpunten zijn.
 
 ## Rollbacktriggers
 
@@ -81,16 +94,17 @@ niet de hele storefront terug voor een enkel verkeerd label of beeld.
 shopify.cmd theme list --store neighbourhood-arnhem.myshopify.com
 ```
 
-2. Publiceer het bewaarde pre-launch theme:
+2. Publiceer het gekozen hersteltheme (zie boven welke van de twee van
+   toepassing is; vul het juiste ID in):
 
 ```powershell
 shopify.cmd theme publish `
   --store neighbourhood-arnhem.myshopify.com `
-  --theme 186898579784
+  --theme <188735193416-of-186898579784>
 ```
 
 3. Controleer opnieuw met `shopify theme list` welk theme de rol `[live]`
-   heeft. Stop wanneer ID `186898579784` niet beschikbaar is; publiceer nooit
+   heeft. Stop wanneer het gekozen ID niet beschikbaar is; publiceer nooit
    op basis van alleen een gelijkende naam.
 4. Test homepage, een product, add-to-cart, quantity, remove, pickup en een
    shippingadres. Bevestig minimaal Nederland en Duitsland via checkout met

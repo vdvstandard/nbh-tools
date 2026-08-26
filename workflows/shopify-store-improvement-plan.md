@@ -808,12 +808,13 @@ Phase 8 retained-blog internal-link update, 2026-08-11:
   no-order mode.
 - [x] Reconcile and validate the approved local theme in a development preview;
   keep it unpublished until the migration window.
-- [ ] Confirm no published empty collections or public draft-only journeys.
-  The draft journey check passes; 19 empty public collections remain.
+- [x] Confirm no published empty collections or public draft-only journeys.
+  The draft journey check passes; the 19 empty public collections were
+  unpublished on 2026-08-26 (see below).
 - [ ] Confirm robots, sitemap, domain, SSL and search-engine settings. Current
   robots/TLS/public-access checks pass; custom-domain cutover and post-cutover
   canonical/SSL verification remain open.
-- [ ] Publish the approved theme version.
+- [x] Publish the approved theme version. Published on 2026-08-26 (see below).
 - [ ] Monitor orders, errors, 404s, sync drift and performance after launch.
 
 Phase 9 read-only preflight evidence, 2026-08-11:
@@ -920,6 +921,32 @@ Phase 9 theme reconciliation update, 2026-08-23:
   empty collections, missing NL/DE rates for the EUR 309.50 shipping edge case,
   and missing city/phone in the primary Shopify shop identity.
 - Publishing the reconciled theme remains an explicit launch-window gate.
+
+Phase 9 theme publication, 2026-08-26:
+
+- Committed and pushed the remaining flash-loading fixes on
+  `codex-lookbook-viewer-updates` (`6615bc5`, `7e75b8b`, `0617e2f`, `9c4eaa9`),
+  including a fix for an oversized caret flash confirmed with a dedicated
+  browser check. Theme Check on the final local repository state still
+  reports zero offenses.
+- Built the reconciled repository into "Launch candidate 8a95917 2026-08-26",
+  pushed it to Shopify as a new unpublished theme (`188754329928`) and
+  independently verified 7/7 browser flows before touching the live role.
+- Captured a pre-publish snapshot of the previous live theme
+  (`.tmp/pre-live-theme-publish-20260826-135809`) and kept
+  "Rollback before navigation update 2026-08-25" (`188735193416`) available
+  as a named rollback theme, alongside the retained former live theme
+  "Codex lookbook updates 2026-06-30" (`186898579784`).
+- Published `188754329928` as the live theme. Independent post-publish
+  verification: 7/7 browser flows pass with zero errors and zero warnings
+  (`.tmp/post-live-theme-flows-20260826.json`).
+- The live storefront `neighbourhood-arnhem.myshopify.com` is public and not
+  password protected. `nbharnhem.com` still serves the old Lightspeed/webshopapp
+  storefront unchanged; custom-domain DNS cutover has deliberately not been
+  touched and remains a separate launch-window step.
+- Update `workflows/shopify-launch-rollback.md`'s confirmed recovery point
+  before the next live change, since the previous live theme ID it names is
+  now out of date.
 
 Phase 9 shipping-rate fix, 2026-08-26:
 
