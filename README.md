@@ -85,6 +85,11 @@ token.
   - Use `--validate-review` to validate and `--apply` to update approved rows.
   - `--debug-colors` inspects color pattern definitions without writing changes.
 
+- `python tools/sync-all-collection-new-products.py`
+  - Move products created since the last run to the top of the manual `all` collection.
+  - Dry run by default. Add `--apply` to write changes.
+  - Runs hourly via GitHub Actions (`.github/workflows/sync-all-collection.yml`).
+
 ## Workflow Docs
 
 Each major tool has a corresponding workflow document in `workflows/`.
@@ -94,6 +99,7 @@ Each major tool has a corresponding workflow document in `workflows/`.
 - `workflows/refresh-shopify-admin-token.md`
 - `workflows/sync-product-brand-metafields.md`
 - `workflows/sync-product-classification.md`
+- `workflows/sync-all-collection-new-products.md`
 
 ## Repository Structure
 

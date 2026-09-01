@@ -1,0 +1,44 @@
+name: Sync all collection new products
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-all-collection
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync new products to the top of the all collection
+        env:
+          SHOPIFY_SHOP: ${{ secrets.SHOPIFY_SHOP }}
+          SHOPIFY_API_KEY: ${{ secrets.SHOPIFY_API_KEY }}
+          SHOPIFY_API_SECRET: ${{ secrets.SHOPIFY_API_SECRET }}
+        run: python tools/sync-all-collection-new-products.py --apply
+
+      - name: Commit updated sync state
+        run: |
+          if ! git diff --quiet -- tools/data/all-collection-sync-state.json; then
+            git config user.name "nbh-tools-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add tools/data/all-collection-sync-state.json
+            git commit -m "Update all collection sync state [skip ci]"
+            git push
+          else
+            echo "No state change to commit."
+          fi
